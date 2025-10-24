@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="assets/css/style_login.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-logo">
+            <img src="assets/logo.png" alt="Logo" />
+        </div>
+        <h2>Log in to your account</h2>
+        <p class="login-welcome">Welcome back! Please enter your details.</p>
+        <form class="login-form">
+            <label for="username">Username / Email Address</label>
+            <input type="text" id="username" name="username" placeholder="Enter username or email" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            <div class="login-options">
+                <label><input type="checkbox" name="stay_logged_in"> Stay logged in</label>
+                <a href="#" class="forgot-password">Forgot password</a>
+            </div>
+            <button type="submit" class="login-btn">Sign In</button>
+        </form>
+        <div class="social-login">
+            <button class="google-btn"><img src="assets/google-icon.png" alt="Google"> Sign in with Google</button>
+            <button class="apple-btn"><img src="assets/apple-icon.png" alt="Apple"> Sign in with Apple</button>
+            <button class="outlook-btn"><img src="assets/images/outlook-icon.png" alt="Outlook"> Sign in with Outlook</button>
+        </div>
+        <div class="login-footer">
+            <span>Don’t have an account?</span> <a href="/signup.html">Sign up</a>
+        </div>
+    </div>
+    <script src="assets/js/login.js"></script>
+</body>
+</html>

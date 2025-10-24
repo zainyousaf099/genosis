@@ -1,0 +1,135 @@
+(function(){
+	// Basic used-space UI initializer — update values from server/JS as needed
+	function setUsedSpace(usedGB, totalGB){
+		const track = document.querySelector('.used-space-fill');
+		const desc = document.querySelector('.used-space-desc');
+		if(!track || !desc) return;
+		const pct = totalGB > 0 ? Math.min(100, Math.round((usedGB/totalGB)*100)) : 0;
+		track.style.width = pct + '%';
+		desc.textContent = `You've used ${usedGB.toFixed(2)} GB of your ${totalGB} GB available space.`;
+	}
+
+	// Sidebar navigation functions
+	function loadDashboard(event) {
+		event.preventDefault();
+		// Remove active class from all menu items
+		document.querySelectorAll('.menu li').forEach(item => item.classList.remove('active'));
+		// Add active class to clicked item
+		event.currentTarget.classList.add('active');
+		console.log('Dashboard loaded');
+	}
+
+	function loadVaults(event) {
+		event.preventDefault();
+		// Remove active class from all menu items
+		document.querySelectorAll('.menu li').forEach(item => item.classList.remove('active'));
+		// Add active class to clicked item
+		event.currentTarget.classList.add('active');
+		console.log('Vaults loaded');
+	}
+
+	function loadCalendar(event) {
+		event.preventDefault();
+		// Remove active class from all menu items
+		document.querySelectorAll('.menu li').forEach(item => item.classList.remove('active'));
+		// Add active class to clicked item
+		event.currentTarget.classList.add('active');
+		console.log('Calendar loaded');
+	}
+
+	function loadSearch(event) {
+		event.preventDefault();
+		// Remove active class from all menu items
+		document.querySelectorAll('.menu li').forEach(item => item.classList.remove('active'));
+		// Add active class to clicked item
+		event.currentTarget.classList.add('active');
+		console.log('Search loaded');
+	}
+
+	function loadSettings(event) {
+		event.preventDefault();
+		// Remove active class from all menu items
+		document.querySelectorAll('.menu li').forEach(item => item.classList.remove('active'));
+		// Add active class to clicked item
+		event.currentTarget.classList.add('active');
+		console.log('Settings loaded');
+	}
+
+	function logout(event) {
+		event.preventDefault();
+		// Remove active class from all menu items
+		document.querySelectorAll('.menu li').forEach(item => item.classList.remove('active'));
+		// Add active class to clicked item
+		event.currentTarget.classList.add('active');
+		console.log('Logout clicked');
+		// Add your logout logic here
+	}
+
+	// Modal functions
+	function openCreateVaultModal() {
+		const modal = document.getElementById('createVaultModal');
+		const input = document.getElementById('vaultNameInput');
+		
+		modal.classList.add('show');
+		input.focus();
+		
+		// Close modal when clicking outside
+		modal.addEventListener('click', function(e) {
+			if (e.target === modal) {
+				closeCreateVaultModal();
+			}
+		});
+		
+		// Close modal with Escape key
+		document.addEventListener('keydown', function(e) {
+			if (e.key === 'Escape') {
+				closeCreateVaultModal();
+			}
+		});
+	}
+
+	function closeCreateVaultModal() {
+		const modal = document.getElementById('createVaultModal');
+		const input = document.getElementById('vaultNameInput');
+		
+		modal.classList.remove('show');
+		input.value = '';
+	}
+
+	function createVault() {
+		const input = document.getElementById('vaultNameInput');
+		const vaultName = input.value.trim();
+		
+		if (vaultName === '') {
+			alert('Please enter a vault name');
+			return;
+		}
+		
+		console.log('Creating vault:', vaultName);
+		
+		// Here you would typically send the data to your server
+		// For now, we'll just close the modal and show a success message
+		closeCreateVaultModal();
+		alert(`Vault "${vaultName}" created successfully!`);
+		
+		// You can add logic here to refresh the vault list or add the new vault to the UI
+	}
+
+	document.addEventListener('DOMContentLoaded', function(){
+		// set initial values (replace with real values later)
+		setUsedSpace(0, 1);
+	});
+
+	// Expose functions globally
+	window.setUsedSpace = setUsedSpace;
+	window.loadDashboard = loadDashboard;
+	window.loadVaults = loadVaults;
+	window.loadCalendar = loadCalendar;
+	window.loadSearch = loadSearch;
+	window.loadSettings = loadSettings;
+	window.logout = logout;
+	window.openCreateVaultModal = openCreateVaultModal;
+	window.closeCreateVaultModal = closeCreateVaultModal;
+	window.createVault = createVault;
+})();
+
