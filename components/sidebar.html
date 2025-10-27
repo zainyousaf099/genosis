@@ -1,0 +1,94 @@
+<!-- Sidebar Component -->
+<!-- Left Narrow Icon Rail -->
+<nav class="sidebar">
+  <ul class="menu">
+    <li onclick="loadDashboard(event)">
+      <div class="icon-wrapper-bar" data-tooltip="Dashboard">
+        <img src="assets/images/dashboard.svg" class="menu-icon" alt="Dashboard">
+      </div>
+    </li>
+    <li class="active" onclick="loadVaults(event)">
+      <div class="icon-wrapper-bar" data-tooltip="Vaults">
+        <img src="assets/images/vault.svg" class="menu-icon" alt="Vaults">
+      </div>
+    </li>
+    <li onclick="loadCalendar(event)">
+      <div class="icon-wrapper-bar" data-tooltip="Calendar">
+        <img src="assets/images/calendar.svg" class="menu-icon" alt="Calendar">
+      </div>
+    </li>
+    <li onclick="loadSearch(event)">
+      <div class="icon-wrapper-bar" data-tooltip="Search">
+        <img src="assets/images/search.svg" class="menu-icon" alt="Search">
+      </div>
+    </li>
+    <li onclick="loadSettings(event)">
+      <div class="icon-wrapper-bar" data-tooltip="Settings">
+        <img src="assets/images/gear.png" class="menu-icon" alt="Settings">
+      </div>
+    </li>
+    <li onclick="logout(event)">
+      <div class="icon-wrapper-bar" data-tooltip="Logout">
+        <img src="assets/images/icon.svg" class="menu-icon" alt="Logout">
+      </div>
+    </li>
+  </ul>
+</nav>
+
+<!-- Sidebar Content Panel -->
+<aside class="sidebar-content">
+  <!-- Sidebar Content -->
+  <!-- Documents Section -->
+  <div class="documents-section">
+    <div class="documents-header" id="documentsHeaderSection">
+      <img src="assets/images/chevron-down.svg" alt="Toggle" class="chevron-icon">
+      <img src="assets/images/icon-folder.svg" alt="Documents" style="width: 16px; height: 16px;">
+      <span class="documents-title">Documents</span>
+    </div>
+    <div class="documents-content">
+      <!-- Documents will be listed here -->
+    </div>
+  </div>
+
+  <!-- Documents Context Menu -->
+  <div id="documentsContextMenu" class="context-menu">
+    <div class="context-menu-item" onmouseenter="showNewSubmenu()" onmouseleave="hideNewSubmenu()">
+      <span>New</span>
+      <img src="assets/images/chevron-right.svg" alt="Arrow" class="menu-arrow">
+      <!-- Nested sub-menu -->
+      <div id="newSubmenu" class="context-submenu">
+        <div class="context-menu-item" onclick="createWorkspace()">Workspace</div>
+        <div class="context-menu-item" onclick="createFile()">File</div>
+        <div class="context-menu-item" onclick="createFolder()">Folder</div>
+      </div>
+    </div>
+    <div class="context-menu-item" onclick="renameDocument()">Rename</div>
+    <div class="context-menu-item" onclick="duplicateDocument()">Duplicate</div>
+    <div class="context-menu-item" onclick="deleteDocument()">Delete</div>
+    <div class="context-menu-item" onclick="copyDocumentLink()">Copy Link</div>
+    <div class="context-menu-item" onclick="getDocumentInfo()">Get Info</div>
+  </div>
+
+  <!-- Bottom Action Icons -->
+  <div class="sidebar-footer-actions">
+    <div class="icon-wrapper" data-tooltip="Delete">
+      <img src="assets/images/icon-delete.svg" class="footer-icon" alt="Delete">
+    </div>
+    <div class="icon-wrapper" data-tooltip="Share">
+      <img src="assets/images/icon-share.svg" class="footer-icon" alt="Share">
+    </div>
+    <div class="icon-wrapper" data-tooltip="Add Folder">
+      <img src="assets/images/icon-add-folder.svg" class="footer-icon" alt="Add Folder">
+    </div>
+    <div class="icon-wrapper" data-tooltip="Add File">
+      <img src="assets/images/book-02.svg" class="footer-icon" alt="Add File">
+    </div>
+    <div class="icon-wrapper" data-tooltip="Back">
+      <img src="assets/images/chevron-left.svg" class="footer-icon" alt="Back">
+    </div>
+    <div class="icon-wrapper" data-tooltip="Forward">
+      <img src="assets/images/chevron-right.svg" class="footer-icon" alt="Forward">
+    </div>
+  </div>
+</aside>
+

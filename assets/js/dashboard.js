@@ -65,55 +65,7 @@
 		// Add your logout logic here
 	}
 
-	// Modal functions
-	function openCreateVaultModal() {
-		const modal = document.getElementById('createVaultModal');
-		const input = document.getElementById('vaultNameInput');
-		
-		modal.classList.add('show');
-		input.focus();
-		
-		// Close modal when clicking outside
-		modal.addEventListener('click', function(e) {
-			if (e.target === modal) {
-				closeCreateVaultModal();
-			}
-		});
-		
-		// Close modal with Escape key
-		document.addEventListener('keydown', function(e) {
-			if (e.key === 'Escape') {
-				closeCreateVaultModal();
-			}
-		});
-	}
-
-	function closeCreateVaultModal() {
-		const modal = document.getElementById('createVaultModal');
-		const input = document.getElementById('vaultNameInput');
-		
-		modal.classList.remove('show');
-		input.value = '';
-	}
-
-	function createVault() {
-		const input = document.getElementById('vaultNameInput');
-		const vaultName = input.value.trim();
-		
-		if (vaultName === '') {
-			alert('Please enter a vault name');
-			return;
-		}
-		
-		console.log('Creating vault:', vaultName);
-		
-		// Here you would typically send the data to your server
-		// For now, we'll just close the modal and show a success message
-		closeCreateVaultModal();
-		alert(`Vault "${vaultName}" created successfully!`);
-		
-		// You can add logic here to refresh the vault list or add the new vault to the UI
-	}
+	// Vault functionality moved to vault_component.js
 
 	document.addEventListener('DOMContentLoaded', function(){
 		// set initial values (replace with real values later)
@@ -128,8 +80,5 @@
 	window.loadSearch = loadSearch;
 	window.loadSettings = loadSettings;
 	window.logout = logout;
-	window.openCreateVaultModal = openCreateVaultModal;
-	window.closeCreateVaultModal = closeCreateVaultModal;
-	window.createVault = createVault;
 })();
 

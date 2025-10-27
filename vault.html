@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vault - jan 2024</title>
+
+  <!-- CSS Files -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/dashboard.css" />
+  <link rel="stylesheet" href="assets/css/sidebar.css" />
+  
+  <style>
+    :root {
+      --accent: #2563eb;
+      --muted: #6b7280;
+      --card-border: #e5e7eb;
+      --bg: #fafbfd;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      border-bottom: 1px solid #d1d5db;
+    }
+
+    .page-container {
+      display: flex;
+      min-height: 100vh;
+      background: var(--bg);
+    }
+
+    /* Top Bar Integrated */
+    .top-bar-integrated {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: #f3f4f6;
+      border-bottom: 1px solid #d1d5db;
+      display: flex;
+      align-items: stretch;
+      z-index: 100;
+    }
+
+    .top-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 16px;
+      flex-shrink: 0;
+    }
+
+    .top-bar-logo {
+      width: 20px;
+      height: 20px;
+      opacity: 0.7;
+    }
+
+    .top-bar-input {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111827;
+      border: 1px solid #d1d5db;
+      outline: none;
+      background: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    .top-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      flex-shrink: 0;
+    }
+
+    .top-bar-icon {
+      width: 20px;
+      height: 20px;
+      padding: 1px;
+      border-radius: 6px;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+
+    .top-bar-icon:hover {
+      background: #e5e7eb;
+      opacity: 1;
+    }
+
+    .top-bar-plus-icon {
+      width: 20px;
+      height: 20px;
+      padding: 1px;
+      cursor: pointer;
+      opacity: 0.7;
+      margin-left: auto;
+    }
+
+    .top-bar-plus-icon:hover {
+      opacity: 1;
+    }
+
+    /* Top Bar Tabs Section */
+    .top-bar-tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      padding: 0 12px;
+      overflow: hidden;
+    }
+
+    .tabs-container {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex: 1;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    .tab-item {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 8px 12px;
+      background: #e5e7eb;
+      border-radius: 9px 9px 0 0;
+      font-size: 13px;
+      color: #6b7280;
+      cursor: pointer;
+      white-space: nowrap;
+      min-width: 144px;
+      justify-content: space-between;
+      height: 100%;
+      border-bottom: 2px solid transparent;
+      position: relative;
+    }
+
+    .tab-item.active {
+      background: white;
+      color: #111827;
+      font-weight: 600;
+      border-bottom: none;
+      border-left: none;
+      border-right: none;
+    }
+
+    .tab-item .tab-close {
+      width: 14px;
+      height: 14px;
+      opacity: 0.6;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .tab-item .tab-close:hover {
+      opacity: 1;
+    }
+
+    .tab-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .tab-action-icon {
+      width: 16px;
+      height: 16px;
+      opacity: 0.6;
+      cursor: pointer;
+      padding: 2px;
+    }
+
+    .tab-action-icon:hover {
+      opacity: 1;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-dialog {
+      background: white;
+      border-radius: 12px;
+      padding: 0;
+      width: 400px;
+      max-width: 90vw;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px 16px 24px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      background: #f3f4f6;
+    }
+
+    .modal-body {
+      padding: 20px 24px;
+    }
+
+    .vault-name-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .vault-name-input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 16px 24px 20px 24px;
+    }
+
+    .btn-cancel {
+      background: white;
+      border: 1px solid #d1d5db;
+      color: #374151;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .btn-cancel:hover {
+      background: #f9fafb;
+    }
+
+    .btn-create {
+      background: #2563eb;
+      border: none;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .btn-create:hover {
+      background: #1d4ed8;
+    }
+
+    /* Folder Info Modal Styles */
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .info-item:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: #374151;
+      font-size: 14px;
+      width: 150px;
+      flex-shrink: 0;
+    }
+
+    .info-value {
+      color: #6b7280;
+      font-size: 14px;
+      flex: 1;
+      text-align: right;
+    }
+
+    .main-container {
+      display: flex;
+      margin-top: 48px; /* Only integrated top bar */
+      height: calc(100vh - 48px);
+    }
+
+    #sidebar-container {
+      display: flex;
+      height: calc(100vh - 48px);
+      overflow: hidden;
+    }
+
+    /* Sidebar Content */
+    .sidebar-content {
+      width: 280px;
+      background: #fff;
+      border-right: 1px solid #d1d5db;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .documents-content {
+      min-height: 400px;
+      overflow-y: auto;
+    }
+
+    .documents-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      cursor: pointer;
+    }
+
+    .documents-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .chevron-icon {
+      width: 14px;
+      height: 14px;
+      opacity: 0.6;
+    }
+
+    /* Context Menu Styles */
+    .context-menu {
+      position: fixed;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      padding: 4px;
+      z-index: 10000;
+      display: none;
+      min-width: 200px;
+    }
+
+    .context-menu.show {
+      display: block;
+    }
+
+    .context-menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #111827;
+      position: relative;
+    }
+
+    .context-menu-item:hover {
+      background: #f3f4f6;
+    }
+
+    .menu-arrow {
+      width: 12px;
+      height: 12px;
+      opacity: 0.5;
+      margin-left: auto;
+    }
+
+    .context-submenu {
+      position: absolute;
+      left: 100%;
+      top: 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      padding: 4px;
+      min-width: 150px;
+      margin-left: 8px;
+      display: none;
+    }
+
+    .context-menu-item:hover .context-submenu {
+      display: block;
+      animation: fadeIn 0.2s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Keep submenu visible when hovering over it */
+    .context-submenu:hover {
+      display: block !important;
+    }
+
+    .context-submenu {
+      pointer-events: auto;
+    }
+
+    .sidebar-footer-actions {
+      margin-top: auto;
+      flex-shrink: 0;
+    }
+
+
+    .documents-content {
+      min-height: 200px;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .sidebar-footer-actions {
+      display: flex;
+      flex-direction: row;
+      gap: 12px;
+      align-items: center;
+      justify-content: flex-start;
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .sidebar-footer-actions .icon-wrapper {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .sidebar-footer-actions .icon-wrapper:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .sidebar-footer-actions .footer-icon {
+      width: 18px;
+      height: 18px;
+      opacity: 0.7;
+    }
+
+    /* Main Content Area */
+    .page-content {
+      flex: 1;
+      padding: 0;
+      overflow: auto;
+      background: #fff;
+    }
+
+    .content-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #9ca3af;
+      font-size: 16px;
+    }
+
+    /* Page Content Component Styles */
+    .page-content-container {
+      padding: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      margin-bottom: 100px;
+      min-height: calc(100vh - 100px);
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .page-title-section {
+      flex: 1;
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 600;
+      color: #111827;
+      margin: 0 0 8px 0;
+    }
+
+    .page-breadcrumb {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .page-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .page-action-icon {
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      border-radius: 6px;
+      background: #f3f4f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page-action-icon:hover {
+      background: #e5e7eb;
+    }
+
+    .page-action-icon img {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Tasks Component */
+    .tasks-component {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 24px;
+    }
+
+    .tasks-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .tasks-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #111827;
+      margin: 0;
+    }
+
+    .tasks-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .add-column-btn {
+      background: white;
+      border: 1px solid #d1d5db;
+      color: #374151;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .add-column-btn:hover {
+      background: #f9fafb;
+    }
+
+    .tasks-icon {
+      width: 18px;
+      height: 18px;
+      opacity: 0.6;
+      cursor: pointer;
+    }
+
+    .tasks-table-container {
+      margin-bottom: 16px;
+    }
+
+    .tasks-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .tasks-table thead {
+      background: #f9fafb;
+    }
+
+    .tasks-table th {
+      padding: 12px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .tasks-table td {
+      padding: 12px;
+      text-align: left;
+      font-size: 14px;
+      color: #111827;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .tasks-table .empty-state {
+      text-align: center;
+      color: #9ca3af;
+      font-style: italic;
+    }
+
+    .tasks-table .task-row {
+      background: #f9fafb;
+    }
+
+    .task-input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      padding: 4px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .task-input[type="date"] {
+      cursor: pointer;
+    }
+
+    .task-input[type="date"]::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      opacity: 0;
+    }
+
+    .add-row-btn {
+      background: white;
+      border: 1px solid #d1d5db;
+      color: #374151;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .add-row-btn:hover {
+      background: #f9fafb;
+    }
+
+    .page-hashtag {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .notes-editor {
+      min-height: 40px;
+      padding: 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      outline: none;
+      cursor: text;
+      background: #f9fafb;
+    }
+
+    .notes-editor:focus {
+      border-color: #2563eb;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .notes-editor:empty:before {
+      content: "Add notes...";
+      color: #9ca3af;
+    }
+
+    /* Bottom Navigation */
+    .page-bottom-nav {
+      position: sticky;
+      bottom: 0;
+      background: white;
+      border-top: 1px solid #e5e7eb;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 40px;
+      z-index: 100;
+    }
+
+    .nav-arrow {
+      width: 16px;
+      height: 16px;
+      opacity: 0.6;
+      cursor: pointer;
+    }
+
+    .nav-add-circle {
+      width: 24px !important;
+      height: 24px !important;
+      opacity: 1 !important;
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .nav-page-name {
+      font-size: 14px;
+      color: #2563eb;
+      text-decoration: underline;
+    }
+
+    .nav-add {
+      position: fixed;
+      right: 24px;
+      bottom: 80px;
+      width: 56px;
+      height: 56px;
+      background: #2563eb;
+      border-radius: 50%;
+      padding: 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-add img {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Add Menu List */
+    .add-menu-list {
+      position: fixed;
+      bottom: 145px; /* Position above the FAB (FAB bottom: 80px + FAB height: 56px + gap) */
+      right: 24px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      padding: 8px 0;
+      z-index: 101; /* Above FAB */
+      min-width: 180px;
+      display: none; /* Hidden by default */
+    }
+
+    .add-menu-list.show {
+      display: block;
+    }
+
+    .add-menu-list .menu-item {
+      padding: 12px 20px;
+      font-size: 15px;
+      color: #374151;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease;
+    }
+
+    .add-menu-list .menu-item:hover {
+      background: #f3f4f6; /* Light gray background on hover */
+    }
+
+    .add-menu-list .menu-item:first-child {
+      border-radius: 12px 12px 0 0;
+    }
+
+    .add-menu-list .menu-item:last-child {
+      border-radius: 0 0 12px 12px;
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Top Bar with Integrated Tabs -->
+  <div class="top-bar-integrated" id="topBarIntegrated">
+    <!-- Left Section: Navigation -->
+    <div class="top-bar-left">
+      <img src="assets/images/vault.svg" alt="Logo" class="top-bar-logo">
+      <input type="text" class="top-bar-input" value="jan 2024" />
+      <img src="assets/images/sort.svg" alt="Sort" class="top-bar-icon" title="Sort">
+      <img src="assets/images/chevron-left.svg" alt="Back" class="top-bar-icon" title="Back">
+      <img src="assets/images/chevron-right.svg" alt="Forward" class="top-bar-icon" title="Forward">
+    </div>
+
+    <!-- Middle Section: Tabs -->
+    <div class="top-bar-tabs">
+      <div class="tabs-container" id="tabsContainer"></div>
+    </div>
+
+    <!-- Right Section: Actions -->
+    <div class="top-bar-right">
+      <img src="assets/images/book-02.svg" alt="Add" class="top-bar-plus-icon" title="Add">
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="main-container">
+    <!-- Sidebar Component (loaded via JavaScript) -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content Area -->
+    <section class="page-content">
+      <div class="content-placeholder">
+        Select a document to view
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Workspace/Folder Modal -->
+  <div id="workspaceModal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="workspaceModalTitle">New Workspace</h3>
+        <button class="modal-close" onclick="closeWorkspaceModal()">
+          <img src="assets/images/block-circle.svg" alt="Close" style="width: 16px; height: 16px;">
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="workspaceNameInput" class="vault-name-input" placeholder="Enter name..." />
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeWorkspaceModal()">Cancel</button>
+        <button class="btn-create" onclick="confirmWorkspace()">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Folder Information Modal -->
+  <div id="folderInfoModal" class="modal-overlay">
+    <div class="modal-dialog" style="width: 500px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Folder Information</h3>
+        <button class="modal-close" onclick="closeFolderInfoModal()">
+          <img src="assets/images/block-circle.svg" alt="Close" style="width: 16px; height: 16px;">
+        </button>
+      </div>
+      <div class="modal-body" style="padding: 24px;">
+        <div class="info-item">
+          <span class="info-label">Name:</span>
+          <span class="info-value" id="folderInfoName">-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">ID:</span>
+          <span class="info-value" id="folderInfoId">-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Created Date:</span>
+          <span class="info-value" id="folderInfoDate">-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Created By:</span>
+          <span class="info-value" id="folderInfoBy">-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Parent ID:</span>
+          <span class="info-value" id="folderInfoParent">-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Full Path:</span>
+          <span class="info-value" id="folderInfoPath">-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Size:</span>
+          <span class="info-value" id="folderInfoSize">-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Files:</span>
+          <span class="info-value" id="folderInfoFiles">-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Size Breakdown:</span>
+          <span class="info-value" id="folderInfoBreakdown">-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Description:</span>
+          <span class="info-value" id="folderInfoDesc">-</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden File Input -->
+  <input type="file" id="fileUploadInput" style="display: none;" multiple />
+
+  <!-- JavaScript Files -->
+  <script src="assets/js/dashboard.js"></script>
+  <script>
+    // Load sidebar component
+    function loadSidebar() {
+      fetch('components/sidebar.html')
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('sidebar-container').innerHTML = html;
+        })
+        .catch(error => {
+          console.error('Error loading sidebar:', error);
+        });
+    }
+
+    // Documents context menu functions
+    function showDocumentsMenu(event) {
+      // This function is now handled inline in addItemToDocuments
+      // Keeping it for backwards compatibility
+    }
+
+    function closeDocumentsMenu() {
+      const menu = document.getElementById('documentsContextMenu');
+      if (menu) {
+        menu.classList.remove('show');
+      }
+    }
+
+    let submenuTimeout;
+    let submenuVisible = false;
+
+    function showNewSubmenu() {
+      clearTimeout(submenuTimeout);
+      const submenu = document.getElementById('newSubmenu');
+      if (submenu) {
+        submenu.style.display = 'block';
+        submenuVisible = true;
+      }
+    }
+
+    function hideNewSubmenu() {
+      clearTimeout(submenuTimeout);
+      // Wait 500ms before hiding to allow cursor movement to submenu
+      submenuTimeout = setTimeout(() => {
+        const submenu = document.getElementById('newSubmenu');
+        if (submenu && !submenuVisible) {
+          submenu.style.display = 'none';
+        }
+      }, 500);
+    }
+
+    // Keep submenu visible when hovering over it
+    document.addEventListener('DOMContentLoaded', function() {
+      const submenu = document.getElementById('newSubmenu');
+      if (submenu) {
+        submenu.addEventListener('mouseenter', function() {
+          submenuVisible = true;
+          clearTimeout(submenuTimeout);
+        });
+
+        submenu.addEventListener('mouseleave', function() {
+          submenuVisible = false;
+          setTimeout(() => {
+            if (!submenuVisible) {
+              submenu.style.display = 'none';
+            }
+          }, 500);
+        });
+      }
+    });
+
+    let currentType = 'workspace';
+
+    function createWorkspace() {
+      closeDocumentsMenu();
+      currentType = 'workspace';
+      openWorkspaceModal('New Workspace');
+    }
+
+    function createFile() {
+      closeDocumentsMenu();
+      // Trigger file input
+      const fileInput = document.getElementById('fileUploadInput');
+      fileInput.click();
+    }
+
+    function createFolder() {
+      closeDocumentsMenu();
+      currentType = 'folder';
+      openWorkspaceModal('New Folder');
+    }
+
+    function openWorkspaceModal(title) {
+      const modal = document.getElementById('workspaceModal');
+      const titleEl = document.getElementById('workspaceModalTitle');
+      const input = document.getElementById('workspaceNameInput');
+      
+      if (!modal || !titleEl || !input) return;
+      
+      titleEl.textContent = title;
+      modal.classList.add('show');
+      input.value = '';
+      input.focus();
+    }
+
+    function closeWorkspaceModal() {
+      const modal = document.getElementById('workspaceModal');
+      const input = document.getElementById('workspaceNameInput');
+      
+      if (!modal || !input) return;
+      
+      modal.classList.remove('show');
+      input.value = '';
+    }
+
+    function confirmWorkspace() {
+      const input = document.getElementById('workspaceNameInput');
+      const name = input.value.trim();
+      
+      if (name === '') {
+        alert('Please enter a name');
+        return;
+      }
+      
+      console.log('Creating', currentType, ':', name);
+      closeWorkspaceModal();
+      
+      // Add the workspace/folder to the Documents section
+      addItemToDocuments(name, currentType);
+      
+      alert(`${currentType} "${name}" created!`);
+    }
+
+    let currentFolder = null; // Track which folder is currently selected
+    let folderStack = []; // Track folder hierarchy
+    let selectedItemElement = null; // Track the currently right-clicked item
+    let selectedItemData = null; // Track data about the selected item
+
+    // Toggle folder expand/collapse
+    function toggleFolder(folderItem, folderId) {
+      const isExpanded = folderItem.classList.contains('expanded');
+      const childrenContainer = folderItem.querySelector('.folder-children');
+      const chevron = folderItem.querySelector('.chevron-icon');
+      
+      if (isExpanded) {
+        // Collapse
+        folderItem.classList.remove('expanded');
+        if (chevron) {
+          chevron.setAttribute('src', 'assets/images/chevron-right.svg');
+        }
+        if (childrenContainer) {
+          childrenContainer.style.display = 'none';
+        }
+      } else {
+        // Expand
+        folderItem.classList.add('expanded');
+        if (chevron) {
+          chevron.setAttribute('src', 'assets/images/chevron-down.svg');
+        }
+        if (childrenContainer) {
+          childrenContainer.style.display = 'block';
+        }
+      }
+    }
+
+    function addItemToDocuments(name, type, parentFolder = null) {
+      // Find the documents content area
+      const documentsContent = document.querySelector('.documents-content');
+      if (!documentsContent) return;
+      
+      // Determine where to add the item
+      let targetContainer = documentsContent;
+      
+      if (parentFolder) {
+        // Find the parent folder element
+        const parentElement = document.querySelector(`[data-folder-id="${parentFolder}"]`);
+        if (parentElement) {
+          // Get or create the nested container
+          let nestedContainer = parentElement.querySelector('.folder-children');
+          if (!nestedContainer) {
+            nestedContainer = document.createElement('div');
+            nestedContainer.className = 'folder-children';
+            nestedContainer.style.marginLeft = '16px';
+            parentElement.appendChild(nestedContainer);
+          }
+          targetContainer = nestedContainer;
+        }
+      }
+      
+      // Create the item element
+      const item = document.createElement('div');
+      item.className = 'documents-item';
+      item.style.userSelect = 'none';
+      item.setAttribute('unselectable', 'on');
+      
+      if (type === 'folder') {
+        const folderId = 'folder-' + Date.now();
+        item.setAttribute('data-folder-id', folderId);
+        item.innerHTML = `
+          <div style="display: flex; align-items: center; padding: 4px 8px;">
+            <img src="assets/images/chevron-down.svg" alt="Expand" class="chevron-icon" style="width: 12px; height: 12px; margin-right: 4px;">
+            <img src="assets/images/icon-folder.svg" alt="Folder" style="width: 16px; height: 16px; opacity: 0.6; margin-right: 8px;">
+            <span>${name}</span>
+          </div>
+        `;
+        
+        // Make folder expandable
+        item.style.cursor = 'pointer';
+        
+        // Add click handler for chevron icon
+        item.addEventListener('click', function(e) {
+          const chevron = e.target.closest('.chevron-icon');
+          if (chevron) {
+            e.stopPropagation();
+            toggleFolder(item, folderId);
+          } else {
+            // Select this folder
+            currentFolder = folderId;
+            document.querySelectorAll('.documents-item').forEach(el => el.classList.remove('selected'));
+            item.classList.add('selected');
+          }
+        });
+        
+        // Initialize as expanded
+        item.classList.add('expanded');
+      } else {
+        item.innerHTML = `
+          <div style="display: flex; align-items: center; padding: 4px 8px; margin-left: 24px;">
+            <img src="assets/images/icon-file.svg" alt="File" style="width: 16px; height: 16px; opacity: 0.6; margin-right: 8px;">
+            <span>${name}</span>
+          </div>
+        `;
+      }
+      
+      // Add click handler for workspace items
+      if (type === 'workspace') {
+        item.addEventListener('click', function(e) {
+          e.stopPropagation();
+          openWorkspace(name);
+        });
+      }
+      
+      // Add contextmenu handler with high priority
+      item.oncontextmenu = function(e) {
+        // Stop everything immediately
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        
+        // Store the clicked element
+        selectedItemElement = item;
+        const itemName = item.querySelector('span')?.textContent || '';
+        const itemType = type === 'folder' ? 'folder' : 'workspace';
+        
+        selectedItemData = {
+          name: itemName,
+          type: itemType,
+          element: item
+        };
+        
+        // Show the menu
+        const menu = document.getElementById('documentsContextMenu');
+        if (menu) {
+          const rect = item.getBoundingClientRect();
+          
+          // Force the menu to show with inline styles
+          menu.style.setProperty('position', 'fixed', 'important');
+          menu.style.setProperty('left', rect.right + 'px', 'important');
+          menu.style.setProperty('top', rect.top + 'px', 'important');
+          menu.style.setProperty('z-index', '999999', 'important');
+          menu.style.setProperty('display', 'block', 'important');
+          menu.style.setProperty('visibility', 'visible', 'important');
+          
+          // Auto-close after 2 seconds if not hovering
+          let closeTimeout = setTimeout(() => {
+            menu.style.display = 'none';
+          }, 2000);
+          
+          // Cancel auto-close on hover
+          menu.addEventListener('mouseenter', () => {
+            clearTimeout(closeTimeout);
+          });
+          
+          menu.addEventListener('mouseleave', () => {
+            closeTimeout = setTimeout(() => {
+              menu.style.display = 'none';
+            }, 2000);
+          });
+          
+          // Close on outside click
+          setTimeout(() => {
+            document.addEventListener('click', function closeMenu(e) {
+              if (!menu.contains(e.target)) {
+                clearTimeout(closeTimeout);
+                menu.style.display = 'none';
+                document.removeEventListener('click', closeMenu);
+              }
+            });
+          }, 0);
+        }
+        
+        return false;
+      };
+      
+      // Add hover effect
+      item.addEventListener('mouseenter', function() {
+        this.style.background = '#f3f4f6';
+      });
+      item.addEventListener('mouseleave', function() {
+        this.style.background = 'transparent';
+      });
+      
+      targetContainer.appendChild(item);
+    }
+
+    // Update confirmWorkspace to add items to current folder
+    function confirmWorkspace() {
+      const input = document.getElementById('workspaceNameInput');
+      const name = input.value.trim();
+      
+      if (name === '') {
+        alert('Please enter a name');
+        return;
+      }
+      
+      console.log('Creating', currentType, ':', name, 'in folder:', currentFolder);
+      closeWorkspaceModal();
+      
+      // Add the workspace/folder to the Documents section
+      addItemToDocuments(name, currentType, currentFolder);
+      
+      alert(`${currentType} "${name}" created!`);
+    }
+
+    // Handle file upload
+    document.addEventListener('DOMContentLoaded', function() {
+      const fileInput = document.getElementById('fileUploadInput');
+      if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+          const files = e.target.files;
+          if (files.length > 0) {
+            console.log('Files selected:', files.length);
+            
+            // Create workspace items for each uploaded file
+            for (let i = 0; i < files.length; i++) {
+              const fileName = files[i].name;
+              addItemToDocuments(fileName, 'workspace', currentFolder);
+            }
+            
+            alert(`Uploaded ${files.length} file(s)!`);
+            // Reset the file input
+            fileInput.value = '';
+          }
+        });
+      }
+    });
+
+    function renameDocument() {
+      if (!selectedItemElement || !selectedItemData) {
+        alert('No item selected');
+        closeDocumentsMenu();
+        return;
+      }
+      
+      const oldName = selectedItemData.name;
+      const newName = prompt(`Rename "${oldName}" to:`, oldName);
+      
+      if (newName && newName.trim() !== '' && newName !== oldName) {
+        const spanElement = selectedItemElement.querySelector('span');
+        if (spanElement) {
+          spanElement.textContent = newName;
+          selectedItemData.name = newName;
+        }
+        alert(`Renamed "${oldName}" to "${newName}"`);
+      }
+      closeDocumentsMenu();
+    }
+
+    function duplicateDocument() {
+      if (!selectedItemElement || !selectedItemData) {
+        alert('No item selected');
+        closeDocumentsMenu();
+        return;
+      }
+      
+      const originalName = selectedItemData.name;
+      const duplicatedName = `${originalName} (1)`;
+      
+      // Determine the type
+      const itemType = selectedItemData.type === 'folder' ? 'folder' : 'workspace';
+      
+      // Add the duplicated item
+      addItemToDocuments(duplicatedName, itemType);
+      
+      alert(`Duplicated "${originalName}"`);
+      closeDocumentsMenu();
+    }
+
+    function deleteDocument() {
+      if (!selectedItemElement || !selectedItemData) {
+        alert('No item selected');
+        closeDocumentsMenu();
+        return;
+      }
+      
+      const itemName = selectedItemData.name;
+      if (confirm(`Are you sure you want to delete "${itemName}"?`)) {
+        selectedItemElement.remove();
+        alert(`Deleted "${itemName}"`);
+      }
+      closeDocumentsMenu();
+    }
+
+    function copyDocumentLink() {
+      if (!selectedItemData) {
+        alert('No item selected');
+        closeDocumentsMenu();
+        return;
+      }
+      
+      const itemName = selectedItemData.name;
+      const itemType = selectedItemData.type;
+      const baseUrl = window.location.origin;
+      const link = `${baseUrl}/vault.html#${itemType}/${encodeURIComponent(itemName)}`;
+      
+      // Copy to clipboard
+      navigator.clipboard.writeText(link).then(() => {
+        alert('Link copied to clipboard!');
+      }).catch(err => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = link;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert('Link copied to clipboard!');
+      });
+      
+      closeDocumentsMenu();
+    }
+
+    function getDocumentInfo() {
+      if (!selectedItemElement || !selectedItemData) {
+        closeDocumentsMenu();
+        return;
+      }
+      
+      // Get current date
+      const now = new Date();
+      const dateStr = `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}`;
+      
+      // Generate a random ID
+      const id = Math.floor(Math.random() * 100);
+      
+      // Populate modal with info
+      document.getElementById('folderInfoName').textContent = selectedItemData.name;
+      document.getElementById('folderInfoId').textContent = id.toString();
+      document.getElementById('folderInfoDate').textContent = dateStr;
+      document.getElementById('folderInfoBy').textContent = 'Current User';
+      document.getElementById('folderInfoParent').textContent = '63';
+      document.getElementById('folderInfoPath').textContent = `jan 2024 / Documents / ${selectedItemData.name}`;
+      document.getElementById('folderInfoSize').textContent = '0 B';
+      document.getElementById('folderInfoFiles').textContent = '0';
+      document.getElementById('folderInfoBreakdown').textContent = '-';
+      document.getElementById('folderInfoDesc').textContent = 'No description available';
+      
+      // Show modal
+      const modal = document.getElementById('folderInfoModal');
+      if (modal) {
+        modal.classList.add('show');
+      }
+      
+      closeDocumentsMenu();
+    }
+
+    function closeFolderInfoModal() {
+      const modal = document.getElementById('folderInfoModal');
+      if (modal) {
+        modal.classList.remove('show');
+      }
+    }
+
+    // Toggle add menu
+    function toggleAddMenu() {
+      const menu = document.getElementById('addMenuList');
+      if (menu) {
+        menu.classList.toggle('show');
+      }
+      
+      // Close menu when clicking outside
+      document.addEventListener('click', function closeMenuOnClick(e) {
+        if (!menu.contains(e.target) && !document.querySelector('.nav-add').contains(e.target)) {
+          menu.classList.remove('show');
+          document.removeEventListener('click', closeMenuOnClick);
+        }
+      });
+    }
+
+    // Tab management
+    let tabs = [];
+    let activeTabId = null;
+
+    function createTab(name) {
+      const tabId = 'tab_' + Date.now();
+      const tab = {
+        id: tabId,
+        name: name,
+        element: null
+      };
+      
+      tabs.push(tab);
+      activeTabId = tabId;
+      renderTabs();
+      return tabId;
+    }
+
+    function renderTabs() {
+      const container = document.getElementById('tabsContainer');
+      if (!container) return;
+      
+      container.innerHTML = '';
+      
+      tabs.forEach(tab => {
+        const tabElement = document.createElement('div');
+        tabElement.className = 'tab-item' + (tab.id === activeTabId ? ' active' : '');
+        tabElement.innerHTML = `
+          <span>${tab.name}</span>
+          <img src="assets/images/close-icon.svg" alt="Close" class="tab-close" onclick="event.stopPropagation(); closeTab('${tab.id}')">
+        `;
+        tabElement.onclick = () => switchTab(tab.id);
+        tab.element = tabElement;
+        container.appendChild(tabElement);
+      });
+    }
+
+    function switchTab(tabId) {
+      activeTabId = tabId;
+      renderTabs();
+      
+      const tab = tabs.find(t => t.id === tabId);
+      if (tab) {
+        // Reload content for this tab
+        const pageContent = document.querySelector('.page-content');
+        if (pageContent) {
+          loadWorkspaceContent(tab.name);
+        }
+      }
+    }
+
+    function closeTab(tabId) {
+      if (tabs.length <= 1) return; // Don't close the last tab
+      
+      tabs = tabs.filter(t => t.id !== tabId);
+      
+      if (activeTabId === tabId) {
+        activeTabId = tabs.length > 0 ? tabs[0].id : null;
+        if (activeTabId) {
+          switchTab(activeTabId);
+        }
+      }
+      
+      renderTabs();
+    }
+
+    function openNewTab() {
+      createTab('New Page');
+    }
+
+    function loadWorkspaceContent(workspaceName) {
+      const pageContent = document.querySelector('.page-content');
+      if (!pageContent) return;
+      
+      fetch('components/page-content.html')
+        .then(response => response.text())
+        .then(html => {
+          pageContent.innerHTML = html;
+          
+          // Update breadcrumb with workspace name
+          const breadcrumb = document.getElementById('pageBreadcrumb');
+          if (breadcrumb) {
+            breadcrumb.textContent = `jan 2024 / Documents / ${workspaceName}`;
+          }
+          
+          // Update hashtag/notes editor
+          setTimeout(() => {
+            const notesEditor = document.querySelector('.notes-editor');
+            if (notesEditor) {
+              notesEditor.textContent = `#${workspaceName}`;
+            }
+          }, 100);
+          
+          // Update page title
+          const pageTitle = document.querySelector('.page-title');
+          if (pageTitle) {
+            pageTitle.textContent = workspaceName;
+          }
+        })
+        .catch(error => {
+          console.error('Error loading page content:', error);
+        });
+    }
+
+    // Open workspace
+    function openWorkspace(name) {
+      // Check if tab already exists
+      let existingTab = tabs.find(t => t.name === name);
+      
+      if (existingTab) {
+        switchTab(existingTab.id);
+      } else {
+        const tabId = createTab(name);
+        loadWorkspaceContent(name);
+      }
+    }
+
+    // Add task row
+    function addTaskRow() {
+      const tbody = document.getElementById('tasksTableBody');
+      if (!tbody) return;
+      
+      // Remove empty state if present
+      const emptyState = tbody.querySelector('.empty-state');
+      if (emptyState) {
+        emptyState.remove();
+      }
+      
+      // Create new row
+      const row = document.createElement('tr');
+      row.className = 'task-row';
+      
+      // Create the date input with ID
+      const dateInputId = 'date-input-' + Date.now();
+      
+      row.innerHTML = `
+        <td><input type="text" class="task-input" placeholder="Task name"></td>
+        <td><input type="text" class="task-input" placeholder="Description"></td>
+        <td><input type="text" class="task-input" placeholder="Priority"></td>
+        <td style="position: relative;">
+          <input type="date" id="${dateInputId}" class="task-input" style="padding-right: 30px;">
+          <img src="assets/images/calendar.svg" alt="Calendar" class="calendar-trigger" data-date-input="${dateInputId}" style="width: 16px; height: 16px; opacity: 0.5; position: absolute; right: 8px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+        </td>
+      `;
+      
+      tbody.appendChild(row);
+      
+      // Add click handler to calendar icon to open date picker
+      const calendarIcon = row.querySelector('.calendar-trigger');
+      if (calendarIcon) {
+        calendarIcon.addEventListener('click', function(e) {
+          e.preventDefault();
+          const dateInput = document.getElementById(dateInputId);
+          if (dateInput) {
+            dateInput.showPicker();
+          }
+        });
+      }
+      
+      // Focus first input
+      const firstInput = row.querySelector('.task-input');
+      if (firstInput) {
+        firstInput.focus();
+      }
+    }
+
+    // Add column (placeholder for future functionality)
+    function addColumn() {
+      alert('Add Column functionality coming soon!');
+    }
+
+    // Load sidebar when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      loadSidebar();
+      
+      // Add context menu to documents header
+      setTimeout(() => {
+        const documentsHeader = document.getElementById('documentsHeaderSection');
+        if (documentsHeader) {
+          documentsHeader.oncontextmenu = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const menu = document.getElementById('documentsContextMenu');
+            if (menu) {
+              const rect = documentsHeader.getBoundingClientRect();
+              menu.style.setProperty('position', 'fixed', 'important');
+              menu.style.setProperty('left', rect.left + 'px', 'important');
+              menu.style.setProperty('top', rect.bottom + 'px', 'important');
+              menu.style.setProperty('z-index', '999999', 'important');
+              menu.style.setProperty('display', 'block', 'important');
+              menu.style.setProperty('visibility', 'visible', 'important');
+              
+              // Auto-close after 2 seconds if not hovering
+              let closeTimeout = setTimeout(() => {
+                menu.style.display = 'none';
+              }, 2000);
+              
+              // Cancel auto-close on hover
+              menu.addEventListener('mouseenter', () => {
+                clearTimeout(closeTimeout);
+              });
+              
+              menu.addEventListener('mouseleave', () => {
+                closeTimeout = setTimeout(() => {
+                  menu.style.display = 'none';
+                }, 2000);
+              });
+              
+              // Close on outside click
+              setTimeout(() => {
+                document.addEventListener('click', function closeMenu(e) {
+                  if (!menu.contains(e.target)) {
+                    clearTimeout(closeTimeout);
+                    menu.style.display = 'none';
+                    document.removeEventListener('click', closeMenu);
+                  }
+                });
+              }, 0);
+            }
+            
+            return false;
+          };
+        }
+      }, 500);
+    });
+  </script>
+</body>
+</html>
+

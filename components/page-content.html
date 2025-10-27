@@ -1,0 +1,78 @@
+<!-- Page Content Component -->
+<div class="page-content-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-title-section">
+      <h1 class="page-title">New Page</h1>
+      <div class="page-breadcrumb" id="pageBreadcrumb">jan 2024 / Documents / zain</div>
+    </div>
+    <div class="page-actions">
+      <div class="page-action-icon">
+        <img src="assets/images/dots-button.svg" alt="More options" title="More options">
+      </div>
+      <div class="page-action-icon">
+        <img src="assets/images/expand.svg" alt="Fullscreen" title="Fullscreen">
+      </div>
+    </div>
+  </div>
+
+  <!-- Tasks Component -->
+  <div class="tasks-component">
+    <div class="tasks-header">
+      <h2 class="tasks-title">Tasks</h2>
+      <div class="tasks-controls">
+        <button class="add-column-btn" onclick="addColumn()">+ Add Column</button>
+        <img src="assets/images/gear.png" alt="Settings" class="tasks-icon" title="Settings">
+      </div>
+    </div>
+
+    <!-- Tasks Table -->
+    <div class="tasks-table-container">
+      <table class="tasks-table">
+        <thead>
+          <tr>
+            <th>Name <img src="assets/images/sort.svg" alt="Sort" style="width: 12px; height: 12px; margin-left: 4px; opacity: 0.5;"></th>
+            <th>Description <img src="assets/images/sort.svg" alt="Sort" style="width: 12px; height: 12px; margin-left: 4px; opacity: 0.5;"></th>
+            <th>Priority <img src="assets/images/sort.svg" alt="Sort" style="width: 12px; height: 12px; margin-left: 4px; opacity: 0.5;"></th>
+            <th>Due Date <img src="assets/images/sort.svg" alt="Sort" style="width: 12px; height: 12px; margin-left: 4px; opacity: 0.5;"></th>
+          </tr>
+        </thead>
+        <tbody id="tasksTableBody">
+          <tr class="empty-state">
+            <td colspan="4">No tasks to display</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Add Row Button -->
+    <button class="add-row-btn" onclick="addTaskRow()">+ Add Row</button>
+  </div>
+
+  <!-- Hashtag / Notes Editor -->
+  <div class="page-hashtag" id="pageHashtag">
+    <div contenteditable="true" class="notes-editor">#zain</div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="page-bottom-nav">
+    <img src="assets/images/chevron-left.svg" alt="Back" class="nav-arrow">
+    <span class="nav-page-name">New Page</span>
+    <img src="assets/images/add-circle.svg" alt="Add" class="nav-arrow nav-add-circle">
+  </div>
+
+  <!-- Floating Add Button -->
+  <div class="nav-add" onclick="toggleAddMenu()">
+    <img src="assets/images/add-plus.svg" alt="Add">
+  </div>
+
+  <!-- Menu List for Floating Add Button -->
+  <div class="add-menu-list" id="addMenuList">
+    <div class="menu-item">Task List</div>
+    <div class="menu-item">Card</div>
+    <div class="menu-item">Image</div>
+    <div class="menu-item">Note</div>
+    <div class="menu-item">Upload File</div>
+  </div>
+</div>
+
