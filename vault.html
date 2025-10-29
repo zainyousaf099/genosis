@@ -342,20 +342,27 @@
 
     #sidebar-container {
       display: flex;
+      width: 280px;
+      min-width: 280px;
+      flex-shrink: 0;
       height: calc(100vh - 48px);
       overflow: hidden;
+      background: #fff;
     }
 
     /* Sidebar Content */
     .sidebar-content {
-      width: 280px;
+      width: 100%;
       background: #fff;
       border-right: 1px solid #d1d5db;
       padding: 18px;
       display: flex;
       flex-direction: column;
       height: 100%;
-      overflow: hidden;
+      min-height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      box-sizing: border-box;
     }
 
     .documents-section {
@@ -471,24 +478,31 @@
     }
 
     .sidebar-footer-actions {
-      display: flex;
-      flex-direction: row;
+      display: flex !important;
+      flex-direction: row !important;
       gap: 12px;
       align-items: center;
       justify-content: flex-start;
       margin-top: auto;
       padding-top: 16px;
       border-top: 1px solid #e5e7eb;
+      flex-shrink: 0;
     }
 
     .sidebar-footer-actions .icon-wrapper {
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 32px !important;
+      height: 32px !important;
+      min-width: 32px !important;
+      min-height: 32px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
       border-radius: 6px;
       cursor: pointer;
+      transition: background 0.2s;
+      visibility: visible !important;
+      opacity: 1 !important;
+      flex-shrink: 0 !important;
     }
 
     .sidebar-footer-actions .icon-wrapper:hover {
@@ -496,9 +510,28 @@
     }
 
     .sidebar-footer-actions .footer-icon {
-      width: 18px;
-      height: 18px;
-      opacity: 0.7;
+      width: 18px !important;
+      height: 18px !important;
+      min-width: 18px !important;
+      min-height: 18px !important;
+      opacity: 1 !important;
+      display: block !important;
+      visibility: visible !important;
+      object-fit: contain !important;
+      flex-shrink: 0 !important;
+    }
+    
+    /* Ensure all images in sidebar are visible */
+    .sidebar-content img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+    
+    .sidebar-content .chevron-icon,
+    .sidebar-content .menu-arrow {
+      display: inline-block;
+      vertical-align: middle;
     }
 
     /* Main Content Area */
@@ -2821,6 +2854,79 @@
     // Load sidebar when page loads
     document.addEventListener('DOMContentLoaded', function() {
       loadSidebar();
+      
+      // After sidebar loads, ensure icons are visible
+      setTimeout(() => {
+        const sidebarContent = document.querySelector('.sidebar-content');
+        if (sidebarContent) {
+          // Ensure footer actions are visible
+          const footerActions = sidebarContent.querySelector('.sidebar-footer-actions');
+          if (footerActions) {
+            footerActions.style.display = 'flex';
+            footerActions.style.flexDirection = 'row';
+            footerActions.style.marginTop = 'auto';
+            footerActions.style.paddingTop = '16px';
+            footerActions.style.borderTop = '1px solid #e5e7eb';
+            footerActions.style.visibility = 'visible';
+            footerActions.style.opacity = '1';
+            footerActions.style.width = '100%';
+            
+            // Force all icon wrappers and images to be visible
+            const iconWrappers = footerActions.querySelectorAll('.icon-wrapper');
+            console.log('Icon wrappers found:', iconWrappers.length);
+            
+            iconWrappers.forEach((wrapper, index) => {
+              wrapper.style.display = 'flex';
+              wrapper.style.width = '32px';
+              wrapper.style.height = '32px';
+              wrapper.style.alignItems = 'center';
+              wrapper.style.justifyContent = 'center';
+              wrapper.style.visibility = 'visible';
+              wrapper.style.opacity = '1';
+              wrapper.style.background = '#f3f4f6'; // Temporary background to see if visible
+              
+              const img = wrapper.querySelector('img');
+              if (img) {
+                img.style.display = 'block';
+                img.style.width = '18px';
+                img.style.height = '18px';
+                img.style.opacity = '1';
+                img.style.visibility = 'visible';
+                img.style.maxWidth = '18px';
+                img.style.maxHeight = '18px';
+                img.style.objectFit = 'contain';
+                
+                // Check if image loaded
+                console.log(`Icon ${index + 1}:`, {
+                  src: img.src,
+                  complete: img.complete,
+                  naturalWidth: img.naturalWidth,
+                  naturalHeight: img.naturalHeight,
+                  display: window.getComputedStyle(img).display,
+                  visibility: window.getComputedStyle(img).visibility,
+                  opacity: window.getComputedStyle(img).opacity
+                });
+                
+                // Force reload if broken
+                if (!img.complete || img.naturalWidth === 0 || img.naturalHeight === 0) {
+                  console.warn(`Icon ${index + 1} broken, reloading:`, img.src);
+                  const src = img.src;
+                  img.src = '';
+                  setTimeout(() => {
+                    img.src = src;
+                  }, 100);
+                }
+              } else {
+                console.warn(`No img found in icon wrapper ${index + 1}`);
+              }
+            });
+            
+            console.log('Footer actions found:', footerActions.children.length, 'icons');
+          } else {
+            console.error('Footer actions not found!');
+          }
+        }
+      }, 500);
       
       // Add collapse/expand and context menu functionality to documents header
       setTimeout(() => {

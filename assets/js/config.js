@@ -21,12 +21,10 @@ export function getApiUrl(endpoint = '') {
         BASE_URL = customUrl;
     } else {
         // Production API URL - Live server
-        // NOTE: Change this based on your actual API structure:
-        // If endpoints are: https://api.rjautonomous.com/auth/login → use 'https://api.rjautonomous.com'
-        // If endpoints are: https://api.rjautonomous.com/api/auth/login → use 'https://api.rjautonomous.com/api'
-        
-        // Production API URL - confirmed structure
         BASE_URL = 'https://api.rjautonomous.com';
+        
+        // Local API URL for development (uncomment to use local API)
+        // BASE_URL = 'http://127.0.0.1:5000';
     }
     
     // Remove leading slash from endpoint if present
@@ -42,10 +40,12 @@ export function getApiUrl(endpoint = '') {
  * Export configuration constants
  */
 export const API_CONFIG = {
-    // Production API base URL
-    // Change this if your API structure is different
-    BASE_URL: 'https://api.rjautonomous.com', // Try without /api first
-    // BASE_URL: 'https://api.rjautonomous.com/api', // If endpoints have /api prefix
+    // Production API base URL - Live server
+    BASE_URL: 'https://api.rjautonomous.com',
+    
+    // Local API base URL for development (uncomment to use local API)
+    // BASE_URL: 'http://127.0.0.1:5000',
+    
     TIMEOUT: 30000, // 30 seconds
     RETRY_ATTEMPTS: 3,
 };
