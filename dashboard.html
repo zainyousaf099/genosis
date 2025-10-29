@@ -518,42 +518,11 @@
 	}
 </style>
 <body>
-  <!-- Page container: left sidebar (your structure) + content -->
-  <div class="page-container">
-    <nav class="sidebar">
-      <ul class="menu">
-        <li onclick="loadDashboard(event)">
-          <div class="icon-wrapper-bar" data-tooltip="Dashboard">
-            <img src="assets/images/dashboard.svg" class="menu-icon" alt="Dashboard">
-          </div>
-        </li>
-        <li class="active" onclick="loadVaults(event)">
-          <div class="icon-wrapper-bar" data-tooltip="Vaults">
-            <img src="assets/images/vault.svg" class="menu-icon" alt="Vaults">
-          </div>
-        </li>
-        <li onclick="loadCalendar(event)">
-          <div class="icon-wrapper-bar" data-tooltip="Calendar">
-            <img src="assets/images/calendar.svg" class="menu-icon" alt="Calendar">
-          </div>
-        </li>
-        <li onclick="loadSearch(event)">
-          <div class="icon-wrapper-bar" data-tooltip="Search">
-            <img src="assets/images/search.svg" class="menu-icon" alt="Search">
-          </div>
-        </li>
-        <li onclick="loadSettings(event)">
-          <div class="icon-wrapper-bar" data-tooltip="Settings">
-            <img src="assets/images/gear.png" class="menu-icon" alt="Settings">
-          </div>
-        </li>
-        <li onclick="logout(event)">
-          <div class="icon-wrapper-bar" data-tooltip="Logout">
-            <img src="assets/images/icon.svg" class="menu-icon" alt="Logout">
-          </div>
-        </li>
-      </ul>
-    </nav>
+  <!-- Main Navbar Container (loaded via navbar.js) -->
+  <div id="main-navbar-container"></div>
+
+  <!-- Page container: sidebar content + main content -->
+  <div class="page-container" style="margin-left: 40px;">
 
     <!-- ---------- SIDEBAR WITH PROPER STRUCTURE ---------- -->
     <aside class="sidebar-content">
@@ -738,7 +707,8 @@
   </div>
 
   <!-- JavaScript files -->
-  <script src="assets/js/dashboard.js"></script>
+  <script type="module" src="assets/js/navbar.js"></script>
+  <script type="module" src="assets/js/dashboard.js"></script>
   <script src="assets/js/vault_component.js"></script>
 </body>
 </html>

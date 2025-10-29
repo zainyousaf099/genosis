@@ -1,0 +1,85 @@
+<!-- Vault Settings Modal -->
+<div class="vault-settings-overlay" id="vaultSettingsModal">
+  <div class="vault-settings-modal">
+    <div class="vault-settings-header">
+      <h2 class="vault-settings-title">Settings</h2>
+      <img src="assets/images/close-icon.svg" alt="Close" class="vault-settings-close" onclick="closeVaultSettings()">
+    </div>
+
+    <div class="vault-settings-tabs">
+      <div class="vault-settings-tab active" onclick="switchSettingsTab('filters')">Advanced Filters</div>
+      <div class="vault-settings-tab" onclick="switchSettingsTab('display')">Display</div>
+    </div>
+
+    <!-- Advanced Filters Tab -->
+    <div class="vault-settings-content" id="filtersTab">
+      <div class="filter-section">
+        <div class="filter-row" id="filtersContainer">
+          <div class="filter-group">
+            <select class="filter-select">
+              <option>Name</option>
+              <option>Description</option>
+              <option>Assignee</option>
+              <option>Priority</option>
+              <option>Due Date</option>
+            </select>
+            <select class="filter-select">
+              <option>Is</option>
+              <option>Is not</option>
+              <option>Contains</option>
+              <option>Does not contain</option>
+            </select>
+            <div class="filter-input-wrapper">
+              <input type="text" class="filter-input" placeholder="Enter value">
+              <img src="assets/images/close-icon.svg" alt="Clear" class="filter-clear">
+            </div>
+          </div>
+        </div>
+        <button class="add-filter-btn" onclick="addFilterRow()">+ Add New Filter</button>
+      </div>
+    </div>
+
+    <!-- Display Tab -->
+    <div class="vault-settings-content" id="displayTab" style="display: none;">
+      <div class="columns-section">
+        <h3 class="columns-title">Columns</h3>
+        <div class="columns-list" id="columnsList">
+          <div class="column-item required">
+            <span>Name</span>
+            <img src="assets/images/eye.svg" alt="Visible" class="column-eye-icon">
+          </div>
+          <div class="column-item">
+            <span>Description</span>
+            <img src="assets/images/eye.svg" alt="Visible" class="column-eye-icon">
+          </div>
+          <div class="column-item">
+            <span>Assignee</span>
+            <img src="assets/images/eye.svg" alt="Visible" class="column-eye-icon">
+          </div>
+          <div class="column-item">
+            <span>Priority</span>
+            <img src="assets/images/eye.svg" alt="Visible" class="column-eye-icon">
+          </div>
+          <div class="column-item">
+            <span>Due Date</span>
+            <img src="assets/images/eye.svg" alt="Visible" class="column-eye-icon">
+          </div>
+          <div class="column-item">
+            <span>Created</span>
+            <img src="assets/images/eye.svg" alt="Visible" class="column-eye-icon">
+          </div>
+          <div class="column-item">
+            <span>Edited</span>
+            <img src="assets/images/eye.svg" alt="Visible" class="column-eye-icon">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vault-settings-footer">
+      <button class="vault-settings-btn secondary" onclick="clearAllFilters()">Clear all</button>
+      <button class="vault-settings-btn primary" onclick="saveAsNewView()">Save as new view</button>
+    </div>
+  </div>
+</div>
+

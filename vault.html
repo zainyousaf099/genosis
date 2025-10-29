@@ -80,17 +80,27 @@
     }
 
     .top-bar-icon {
-      width: 20px;
-      height: 20px;
-      padding: 1px;
-      border-radius: 6px;
+      width: 24px;
+      height: 24px;
       cursor: pointer;
+      border-radius: 6px;
+      background: #f3f4f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
       opacity: 0.7;
+      padding: 2px;
     }
 
     .top-bar-icon:hover {
       background: #e5e7eb;
       opacity: 1;
+    }
+
+    .top-bar-icon img {
+      width: 16px;
+      height: 16px;
     }
 
     .top-bar-plus-icon {
@@ -150,6 +160,7 @@
       border-bottom: none;
       border-left: none;
       border-right: none;
+      margin-left: 10px;
     }
 
     .tab-item .tab-close {
@@ -345,6 +356,10 @@
       flex-direction: column;
       height: 100%;
       overflow: hidden;
+    }
+
+    .documents-section {
+      margin-bottom: 20px;
     }
 
     .documents-content {
@@ -561,6 +576,129 @@
       height: 16px;
     }
 
+    /* Right Sidebar */
+    .right-sidebar {
+      position: fixed;
+      top: 0;
+      right: -320px;
+      width: 320px;
+      height: 100vh;
+      background: white;
+      box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+      transition: right 0.3s ease-in-out;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .right-sidebar.show {
+      right: 0;
+    }
+
+    /* Backdrop for right sidebar */
+    .right-sidebar::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease-in-out;
+      z-index: -1;
+    }
+
+    .right-sidebar.show::before {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .right-sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px;
+      border-bottom: 1px solid #e5e7eb;
+      background-color: white;
+    }
+
+    .right-sidebar-close {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+
+    .right-sidebar-close:hover {
+      opacity: 1;
+    }
+
+    .right-sidebar-icon {
+      width: 20px;
+      height: 20px;
+      opacity: 0.6;
+      cursor: pointer;
+    }
+
+    .right-sidebar-icon:hover {
+      opacity: 1;
+    }
+
+    .right-sidebar-content {
+      padding: 16px;
+      overflow-y: auto;
+      flex: 1;
+      background-color: white;
+    }
+
+    .right-sidebar-section {
+      margin-bottom: 24px;
+    }
+
+    .right-sidebar-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .right-sidebar-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #374151;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .right-sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 0;
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .referenced-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      cursor: pointer;
+    }
+
+    .referenced-item:hover {
+      color: #111827;
+    }
+
+    .referenced-item img {
+      width: 16px;
+      height: 16px;
+      opacity: 0.5;
+    }
+
     /* Tasks Component */
     .tasks-component {
       background: white;
@@ -670,6 +808,14 @@
       opacity: 0;
     }
 
+    .card-date-input {
+      cursor: pointer;
+    }
+
+    .card-date-input::-webkit-calendar-picker-indicator {
+      opacity: 0;
+    }
+
     .add-row-btn {
       background: white;
       border: 1px solid #d1d5db;
@@ -685,10 +831,85 @@
       background: #f9fafb;
     }
 
+    /* Cards Section */
+    .cards-section {
+      margin-bottom: 24px;
+      display: none; /* Hidden by default */
+    }
+
+    .cards-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 20px;
+    }
+
+    .cards-container {
+      position: relative;
+      min-height: 400px;
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .card {
+      position: absolute;
+      width: 250px;
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      cursor: move;
+      transition: transform 0.2s;
+      background: white;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #111827;
+      margin: 0;
+    }
+
+    .card-delete:hover {
+      opacity: 1;
+    }
+
+    .card-priority {
+      font-size: 12px;
+      color: #6b7280;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .card-description {
+      font-size: 14px;
+      color: #374151;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .card-footer {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
     .page-hashtag {
       color: #6b7280;
       font-size: 14px;
       margin-bottom: 24px;
+      display: none; /* Hidden by default */
     }
 
     .notes-editor {
@@ -727,6 +948,80 @@
       z-index: 100;
     }
 
+    .nav-pages-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: flex-start;
+      overflow-x: auto;
+      padding: 0 12px;
+      max-width: 50%;
+      margin: 0 auto;
+    }
+
+    .nav-pages-container::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .nav-pages-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    .nav-pages-container::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 3px;
+    }
+
+    .nav-pages-container::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+
+    .nav-page-item {
+      padding: 4px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #6b7280;
+      font-size: 14px;
+      white-space: nowrap;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .nav-page-item:hover {
+      background: #f3f4f6;
+    }
+
+    .nav-page-item.active {
+      color: #2563eb;
+      text-decoration: underline;
+      font-weight: 500;
+    }
+
+    /* Context Menu for Page Items */
+    .page-context-menu {
+      position: absolute;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0, 0, aves);
+      z-index: 2000;
+      display: none;
+      min-width: 120px;
+      padding: 4px-cd0;
+    }
+
+    .page-context-menu-item {
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #374151;
+      transition: background 0.2s;
+    }
+
+    .page-context-menu-item:hover {
+      background: #f3f4f6;
+    }
+
     .nav-arrow {
       width: 16px;
       height: 16px;
@@ -742,10 +1037,225 @@
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     }
 
+    /* Vault Settings Modal */
+    .vault-settings-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+    }
+
+    .vault-settings-modal {
+      background: white;
+      border-radius: 12px;
+      width: 600px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .vault-settings-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .vault-settings-title {
+      font-size: 18px;
+      font-weight: ailerons600;
+      color: #111827;
+      margin: 0;
+    }
+
+    .vault-settings-close {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      opacity: 0.6;
+    }
+
+    .vault-settings-tabs {
+      display: flex;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0 24px;
+    }
+
+    .vault-settings-tab {
+      padding: 12px 16px;
+      cursor: pointer;
+      color: #6b7280;
+      font-size: 14px;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: all 0.2s;
+    }
+
+    .vault-settings-tab.active {
+      color: #2563eb;
+      border-bottom-color: #2563eb;
+    }
+
+    .vault-settings-content {
+      padding: 24px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .filter-section {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .filter-select {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+      background: white;
+    }
+
+    .filter-input-wrapper {
+      flex: 2;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .filter-input {
+      flex: 1;
+      padding: 8px 36px 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .filter-clear {
+      position: absolute;
+      right: 8px;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      opacity: 0.4;
+    }
+
+    .filter-clear:hover {
+      opacity: 0.8;
+    }
+
+    .add-filter-btn {
+      padding: 8px 12px;
+      border: 1px dashed #d1d5db;
+      border-radius: 6px;
+      background: transparent;
+      color: #6b7280;
+      cursor: pointer;
+      font-size: 14px;
+      width: fit-content;
+    }
+
+    .add-filter-btn:hover {
+      background: #f9fafb;
+      border-color: #9ca3af;
+    }
+
+    .columns-section {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .columns-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111827;
+      margin: 0;
+    }
+
+    .columns-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .column-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 6px;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .column-item.required {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .column-eye-icon {
+      width: 18px;
+      height: 18px;
+      opacity: 0.6;
+    }
+
+    .vault-settings-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 20px 24px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .vault-settings-btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .vault-settings-btn.secondary {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .vault-settings-btn.secondary:hover {
+      background: #e5e7eb;
+    }
+
+    .vault-settings-btn.primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .vault-settings-btn.primary:hover {
+      background: #1d4ed8;
+    }
+
     .nav-page-name {
       font-size: 14px;
       color: #2563eb;
-      text-decoration: underline;
+      text-decoration: nonw;
+      color: gray;
     }
 
     .nav-add {
@@ -830,12 +1340,17 @@
 
     <!-- Right Section: Actions -->
     <div class="top-bar-right">
-      <img src="assets/images/book-02.svg" alt="Add" class="top-bar-plus-icon" title="Add">
+      <div class="top-bar-icon" onclick="toggleRightSidebar()" title="Information">
+        <img src="assets/images/book-02.svg" alt="Information">
+      </div>
     </div>
   </div>
 
+  <!-- Main Navbar Container (loaded via navbar.js) -->
+  <div id="main-navbar-container"></div>
+
   <!-- Main Container -->
-  <div class="main-container">
+  <div class="main-container" style="margin-left: 40px;">
     <!-- Sidebar Component (loaded via JavaScript) -->
     <div id="sidebar-container"></div>
 
@@ -921,11 +1436,137 @@
     </div>
   </div>
 
+  <!-- Add New Card Modal -->
+  <div id="cardModal" class="modal-overlay">
+    <div class="modal-dialog" style="width: 600px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Card</h3>
+        <button class="modal-close" onclick="closeCardModal()">
+          <img src="assets/images/block-circle.svg" alt="Close" style="width: 16px; height: 16px;">
+        </button>
+      </div>
+      <div class="modal-body" style="padding: 24px;">
+        <div style="margin-bottom: 16px;">
+          <input type="text" id="cardTitleInput" class="vault-name-input" placeholder="Title" style="margin-bottom: 12px;" />
+        </div>
+        <div style="margin-bottom: 16px;">
+          <textarea id="cardDescriptionInput" class="vault-name-input" placeholder="Description" style="min-height: 100px; resize: vertical; font-family: inherit;"></textarea>
+        </div>
+        <div style="margin-bottom: 16px; position: relative;">
+          <select id="cardAssigneeInput" class="vault-name-input" style="padding-right: 30px; appearance: none; background-image: url('assets/images/chevron-down.svg'); background-repeat: no-repeat; background-position: right 8px center; background-size: 16px;">
+            <option value="">Select Assignee</option>
+            <option value="user1">User 1</option>
+            <option value="user2">User 2</option>
+            <option value="user3">User 3</option>
+          </select>
+        </div>
+        <div style="margin-bottom: 16px;">
+          <input type="text" id="cardPriorityInput" class="vault-name-input" placeholder="Priority" style="margin-bottom: 12px;" />
+        </div>
+        <div style="position: relative;">
+          <input type="date" id="cardDateInput" class="vault-name-input card-date-input" placeholder="mm/dd/yyyy" style="padding-right: 30px;" />
+          <img src="assets/images/calendar-icon.svg" alt="Calendar" class="card-calendar-icon" style="width: 16px; height: 16px; position: absolute; right: 8px; top: 50%; transform: translateY(-50%); opacity: 0.5; cursor: pointer;">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeCardModal()">Cancel</button>
+        <button class="btn-create" onclick="saveCard()">Save</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Hidden File Input -->
+  <input type="file" id="imageUploadInput" style="display: none;" accept="image/*" multiple />
   <input type="file" id="fileUploadInput" style="display: none;" multiple />
+
+  <!-- Vault Settings Modal -->
+  <div id="vaultSettingsModal" class="vault-settings-overlay" style="display: none;">
+    <div class="vault-settings-modal">
+      <div class="vault-settings-header">
+        <h2 class="vault-settings-title">Settings</h2>
+        <img src="assets/images/close-icon.svg" alt="Close" class="vault-settings-close" onclick="closeVaultSettings()">
+      </div>
+
+      <div class="vault-settings-tabs">
+        <div class="vault-settings-tab active" onclick="switchSettingsTab('filters')">Advanced Filters</div>
+        <div class="vault-settings-tab" onclick="switchSettingsTab('display')">Display</div>
+      </div>
+
+      <!-- Advanced Filters Tab -->
+      <div class="vault-settings-content active" id="filtersTab">
+        <div class="filter-section">
+          <div class="filter-row" id="filtersContainer">
+            <div class="filter-group">
+              <select class="filter-select">
+                <option>Name</option>
+                <option>Description</option>
+                <option>Assignee</option>
+                <option>Priority</option>
+                <option>Due Date</option>
+              </select>
+              <select class="filter-select">
+                <option>Is</option>
+                <option>Is not</option>
+                <option>Contains</option>
+                <option>Does not contain</option>
+              </select>
+              <div class="filter-input-wrapper">
+                <input type="text" class="filter-input" placeholder="Enter value">
+                <img src="assets/images/close-icon.svg" alt="Clear" class="filter-clear">
+              </div>
+            </div>
+          </div>
+          <button class="add-filter-btn" onclick="addFilterRow()">+ Add New Filter</button>
+        </div>
+      </div>
+
+      <!-- Display Tab -->
+      <div class="vault-settings-content" id="displayTab" style="display: none;">
+        <div class="columns-section">
+          <h3 class="columns-title">Columns</h3>
+          <div class="columns-list" id="columnsList">
+            <div class="column-item required">
+              <span>Name</span>
+              <img src="assets/images/eye.svg" alt="Visible" class="column-eye-icon">
+            </div>
+            <div class="column-item">
+              <span>Description</span>
+              <img src="assets/images/eye.svg" alt="Visible" class="column-eye-icon">
+            </div>
+            <div class="column-item">
+              <span>Assignee</span>
+              <img src="assets/images/eye.svg" alt="Visible" class="column-eye-icon">
+            </div>
+            <div class="column-item">
+              <span>Priority</span>
+              <img src="assets/images/eye.svg" alt="Visible" class="column-eye-icon">
+            </div>
+            <div class="column-item">
+              <span>Due Date</span>
+              <img src="assets/images/eye.svg" alt="Visible" class="column-eye-icon">
+            </div>
+            <div class="column-item">
+              <span>Created</span>
+              <img src="assets/images/eye.svg" alt="Visible" class="column-eye-icon">
+            </div>
+            <div class="column-item">
+              <span>Edited</span>
+              <img src="assets/images/eye.svg" alt="Visible" class="column-eye-icon">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vault-settings-footer">
+        <button class="vault-settings-btn secondary" onclick="clearAllFilters()">Clear all</button>
+        <button class="vault-settings-btn primary" onclick="saveAsNewView()">Save as new view</button>
+      </div>
+    </div>
+  </div>
 
   <!-- JavaScript Files -->
   <script src="assets/js/dashboard.js"></script>
+  <script src="assets/js/card.js"></script>
   <script>
     // Load sidebar component
     function loadSidebar() {
@@ -1039,24 +1680,6 @@
       input.value = '';
     }
 
-    function confirmWorkspace() {
-      const input = document.getElementById('workspaceNameInput');
-      const name = input.value.trim();
-      
-      if (name === '') {
-        alert('Please enter a name');
-        return;
-      }
-      
-      console.log('Creating', currentType, ':', name);
-      closeWorkspaceModal();
-      
-      // Add the workspace/folder to the Documents section
-      addItemToDocuments(name, currentType);
-      
-      alert(`${currentType} "${name}" created!`);
-    }
-
     let currentFolder = null; // Track which folder is currently selected
     let folderStack = []; // Track folder hierarchy
     let selectedItemElement = null; // Track the currently right-clicked item
@@ -1122,36 +1745,39 @@
       if (type === 'folder') {
         const folderId = 'folder-' + Date.now();
         item.setAttribute('data-folder-id', folderId);
-        item.innerHTML = `
-          <div style="display: flex; align-items: center; padding: 4px 8px;">
-            <img src="assets/images/chevron-down.svg" alt="Expand" class="chevron-icon" style="width: 12px; height: 12px; margin-right: 4px;">
-            <img src="assets/images/icon-folder.svg" alt="Folder" style="width: 16px; height: 16px; opacity: 0.6; margin-right: 8px;">
-            <span>${name}</span>
-          </div>
+        
+        // Create the header div
+        const headerDiv = document.createElement('div');
+        headerDiv.style.cssText = 'display: flex; align-items: center; padding: 4px 8px;';
+        headerDiv.innerHTML = `
+          <img src="assets/images/chevron-down.svg" alt="Expand" class="chevron-icon" style="width: 12px; height: 12px; margin-right: 4px;">
+          <img src="assets/images/icon-folder.svg" alt="Folder" style="width: 16px; height: 16px; opacity: 0.6; margin-right: 8px;">
+          <span>${name}</span>
         `;
+        
+        // Create the children container
+        const childrenContainer = document.createElement('div');
+        childrenContainer.className = 'folder-children';
+        childrenContainer.style.cssText = 'display: block; margin-left: 24px;';
+        
+        item.appendChild(headerDiv);
+        item.appendChild(childrenContainer);
         
         // Make folder expandable
         item.style.cursor = 'pointer';
         
-        // Add click handler for chevron icon
+        // Add click handler to toggle folder - clicking anywhere on the folder header toggles it
         item.addEventListener('click', function(e) {
-          const chevron = e.target.closest('.chevron-icon');
-          if (chevron) {
-            e.stopPropagation();
-            toggleFolder(item, folderId);
-          } else {
-            // Select this folder
-            currentFolder = folderId;
-            document.querySelectorAll('.documents-item').forEach(el => el.classList.remove('selected'));
-            item.classList.add('selected');
-          }
+          e.stopPropagation();
+          toggleFolder(item, folderId);
         });
         
         // Initialize as expanded
         item.classList.add('expanded');
       } else {
+        // For files/workspaces, no additional indentation since they'll be added to the appropriate container
         item.innerHTML = `
-          <div style="display: flex; align-items: center; padding: 4px 8px; margin-left: 24px;">
+          <div style="display: flex; align-items: center; padding: 4px 8px;">
             <img src="assets/images/icon-file.svg" alt="File" style="width: 16px; height: 16px; opacity: 0.6; margin-right: 8px;">
             <span>${name}</span>
           </div>
@@ -1178,10 +1804,17 @@
         const itemName = item.querySelector('span')?.textContent || '';
         const itemType = type === 'folder' ? 'folder' : 'workspace';
         
+        // Set currentFolder if this is a folder
+        if (itemType === 'folder') {
+          currentFolder = item.getAttribute('data-folder-id');
+          console.log('Current folder set to:', currentFolder);
+        }
+        
         selectedItemData = {
           name: itemName,
           type: itemType,
-          element: item
+          element: item,
+          folderId: type === 'folder' ? item.getAttribute('data-folder-id') : null
         };
         
         // Show the menu
@@ -1260,6 +1893,32 @@
 
     // Handle file upload
     document.addEventListener('DOMContentLoaded', function() {
+      // Handle image upload
+      const imageInput = document.getElementById('imageUploadInput');
+      if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+          const files = e.target.files;
+          if (files.length > 0) {
+            console.log('Images selected:', files.length);
+            
+            // Display uploaded images
+            files.forEach(file => {
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                // Create image card or display
+                alert(`Image "${file.name}" uploaded successfully!`);
+              };
+              reader.readAsDataURL(file);
+            });
+            
+            alert(`Uploaded ${files.length} image(s)!`);
+            // Reset the image input
+            imageInput.value = '';
+          }
+        });
+      }
+
+      // Handle file upload
       const fileInput = document.getElementById('fileUploadInput');
       if (fileInput) {
         fileInput.addEventListener('change', function(e) {
@@ -1407,6 +2066,273 @@
       }
     }
 
+    // Card Modal Functions
+    function openCardModal() {
+      const modal = document.getElementById('cardModal');
+      if (!modal) return;
+      
+      modal.classList.add('show');
+      
+      // Focus on the first input
+      const titleInput = document.getElementById('cardTitleInput');
+      if (titleInput) {
+        titleInput.focus();
+      }
+      
+      // Add click handler for calendar icon to open date picker
+      setTimeout(() => {
+        const calendarIcon = modal.querySelector('.card-calendar-icon');
+        const dateInput = document.getElementById('cardDateInput');
+        
+        if (calendarIcon && dateInput) {
+          calendarIcon.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (dateInput) {
+              dateInput.showPicker();
+            }
+          });
+        }
+      }, 100);
+    }
+
+    function closeCardModal() {
+      const modal = document.getElementById('cardModal');
+      if (!modal) return;
+      
+      modal.classList.remove('show');
+      
+      // Clear all inputs
+      document.getElementById('cardTitleInput').value = '';
+      document.getElementById('cardDescriptionInput').value = '';
+      document.getElementById('cardPriorityInput').value = '';
+      document.getElementById('cardAssigneeInput').value = '';
+      document.getElementById('cardDateInput').value = '';
+    }
+
+    // Show Cards section
+    function showCardsSection() {
+      const cardsSection = document.querySelector('.cards-section');
+      if (cardsSection) {
+        cardsSection.style.display = 'block';
+      }
+    }
+
+    // Show Notes editor
+    function showNotesEditor() {
+      const notesEditor = document.getElementById('pageHashtag');
+      if (notesEditor) {
+        notesEditor.style.display = 'block';
+      }
+    }
+
+    // Trigger Image Upload
+    function triggerImageUpload() {
+      const imageInput = document.getElementById('imageUploadInput');
+      if (imageInput) {
+        imageInput.click();
+      }
+    }
+
+    // Trigger File Upload
+    function triggerFileUpload() {
+      const fileInput = document.getElementById('fileUploadInput');
+      if (fileInput) {
+        fileInput.click();
+      }
+    }
+
+    function saveCard() {
+      const title = document.getElementById('cardTitleInput').value.trim();
+      
+      if (!title) {
+        alert('Please enter a title');
+        return;
+      }
+      
+      // Get all card data
+      const description = document.getElementById('cardDescriptionInput').value.trim();
+      const priority = document.getElementById('cardPriorityInput').value.trim();
+      const assignee = document.getElementById('cardAssigneeInput').value.trim();
+      const date = document.getElementById('cardDateInput').value;
+      
+      // Save using cardManager
+      if (typeof saveCardToManager === 'function') {
+        saveCardToManager(title, description, priority, assignee, date);
+        console.log('Card saved successfully');
+      } else {
+        console.error('saveCardToManager function not found');
+        alert('Error: Card manager not available');
+      }
+      
+      // Close the modal
+      closeCardModal();
+      
+      // Show success message
+      alert('Card saved successfully!');
+    }
+
+    // Toggle right sidebar
+    function toggleRightSidebar() {
+      const sidebar = document.getElementById('rightSidebar');
+      if (sidebar) {
+        const isShowing = sidebar.classList.contains('show');
+        sidebar.classList.toggle('show');
+        
+        // Update the sidebar content when opening
+        if (!isShowing) {
+          // Remove any existing backdrop first to prevent duplicates
+          const existingBackdrop = document.querySelector('.sidebar-backdrop');
+          if (existingBackdrop) existingBackdrop.remove();
+          
+          setTimeout(() => {
+            // Update tags, links, and references
+            if (typeof cardManager !== 'undefined' && cardManager) {
+              cardManager.updatePageTags();
+              cardManager.updateExternalLinks();
+              cardManager.updateReferencedBy();
+            }
+            
+            // Add click listener to backdrop (only one)
+            const backdrop = document.createElement('div');
+            backdrop.className = 'sidebar-backdrop';
+            backdrop.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.3); z-index: 999;';
+            backdrop.onclick = () => toggleRightSidebar();
+            document.body.appendChild(backdrop);
+          }, 0);
+        } else {
+          // Remove backdrop when closing
+          const backdrop = document.querySelector('.sidebar-backdrop');
+          if (backdrop) backdrop.remove();
+        }
+      }
+    }
+
+    // Vault Settings Functions
+    function openVaultSettings() {
+      const modal = document.getElementById('vaultSettingsModal');
+      const titleElement = document.querySelector('.vault-settings-title');
+      if (modal) {
+        // Update title to default Settings
+        if (titleElement) {
+          titleElement.textContent = 'Settings';
+        }
+        modal.style.display = 'flex';
+      }
+    }
+
+    function closeVaultSettings() {
+      const modal = document.getElementById('vaultSettingsModal');
+      if (modal) {
+        modal.style.display = 'none';
+      }
+    }
+
+    function switchSettingsTab(tabName) {
+      // Remove active class from all tabs
+      document.querySelectorAll('.vault-settings-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Hide all content
+      document.querySelectorAll('.vault-settings-content').forEach(content => {
+        content.style.display = 'none';
+      });
+      
+      // Show selected tab and content
+      if (tabName === 'filters') {
+        document.querySelectorAll('.vault-settings-tab')[0].classList.add('active');
+        document.getElementById('filtersTab').style.display = 'block';
+      } else if (tabName === 'display') {
+        document.querySelectorAll('.vault-settings-tab')[1].classList.add('active');
+        document.getElementById('displayTab').style.display = 'block';
+        
+        // Attach click handlers to eye icons
+        attachEyeIconHandlers();
+      }
+    }
+
+    // Attach click handlers to eye icons
+    function attachEyeIconHandlers() {
+      const eyeIcons = document.querySelectorAll('.column-eye-icon');
+      eyeIcons.forEach(icon => {
+        // Remove existing handlers to avoid duplicates
+        const newIcon = icon.cloneNode(true);
+        icon.parentNode.replaceChild(newIcon, icon);
+        
+        // Add click handler
+        newIcon.style.cursor = 'pointer';
+        newIcon.onclick = function(e) {
+          e.stopPropagation();
+          toggleColumnVisibility(this);
+        };
+      });
+    }
+
+    // Toggle column visibility
+    function toggleColumnVisibility(eyeIcon) {
+      const columnItem = eyeIcon.closest('.column-item');
+      const isRequired = columnItem.classList.contains('required');
+      
+      // Don't allow hiding required columns
+      if (isRequired) {
+        return;
+      }
+      
+      // Toggle visibility state - check by looking at the opacity or source
+      const isVisible = eyeIcon.style.opacity === '' || eyeIcon.style.opacity === '0.6' || eyeIcon.style.opacity === '1';
+      
+      if (isVisible) {
+        // Hide column - change to gray eye-off icon
+        eyeIcon.src = 'assets/images/eye-off.svg';
+        eyeIcon.style.opacity = '0.5';
+        columnItem.style.opacity = '0.6';
+        columnItem.style.background = '#f9fafb';
+      } else {
+        // Show column - change to blue eye icon
+        eyeIcon.src = 'assets/images/eye.svg';
+        eyeIcon.style.opacity = '0.8';
+        columnItem.style.opacity = '1';
+        columnItem.style.background = '#f3f4f6';
+      }
+    }
+
+    function addFilterRow() {
+      const container = document.getElementById('filtersContainer');
+      const newFilter = document.createElement('div');
+      newFilter.className = 'filter-group';
+      newFilter.innerHTML = `
+        <select class="filter-select">
+          <option>Name</option>
+          <option>Description</option>
+          <option>Assignee</option>
+          <option>Priority</option>
+          <option>Due Date</option>
+        </select>
+        <select class="filter-select">
+          <option>Is</option>
+          <option>Is not</option>
+          <option>Contains</option>
+          <option>Does not contain</option>
+        </select>
+        <div class="filter-input-wrapper">
+          <input type="text" class="filter-input" placeholder="Enter value">
+          <img src="assets/images/close-icon.svg" alt="Clear" class="filter-clear" onclick="this.parentElement.parentElement.remove()">
+        </div>
+      `;
+      container.appendChild(newFilter);
+    }
+
+    function clearAllFilters() {
+      const container = document.getElementById('filtersContainer');
+      container.innerHTML = '';
+      addFilterRow(); // Add one empty filter row back
+    }
+
+    function saveAsNewView() {
+      alert('View saved successfully!');
+      closeVaultSettings();
+    }
+
     // Toggle add menu
     function toggleAddMenu() {
       const menu = document.getElementById('addMenuList');
@@ -1426,6 +2352,16 @@
     // Tab management
     let tabs = [];
     let activeTabId = null;
+
+    // Initialize with a default tab when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      // Create a default tab
+      setTimeout(() => {
+        if (tabs.length === 0) {
+          createTab('New Page');
+        }
+      }, 500);
+    });
 
     function createTab(name) {
       const tabId = 'tab_' + Date.now();
@@ -1458,6 +2394,115 @@
         tab.element = tabElement;
         container.appendChild(tabElement);
       });
+      
+      // Also render bottom nav pages
+      renderBottomNavPages();
+    }
+
+    // Render all pages in bottom navigation
+    function renderBottomNavPages() {
+      const container = document.getElementById('navPagesContainer');
+      if (!container) return;
+      
+      container.innerHTML = '';
+      
+      tabs.forEach(tab => {
+        const pageItem = document.createElement('span');
+        pageItem.className = 'nav-page-item' + (tab.id === activeTabId ? ' active' : '');
+        pageItem.textContent = tab.name;
+        pageItem.onclick = (e) => {
+          e.stopPropagation();
+          switchTab(tab.id);
+        };
+        pageItem.ondblclick = (e) => {
+          e.stopPropagation();
+          editBottomNavPageName(tab, pageItem);
+        };
+        pageItem.oncontextmenu = (e) => {
+          e.preventDefault();
+          showPageContextMenu(e, tab, pageItem);
+        };
+        container.appendChild(pageItem);
+      });
+    }
+
+    // Show context menu for page item
+    function showPageContextMenu(event, tab, pageItem) {
+      // Remove any existing menu
+      const existingMenu = document.getElementById('pageContextMenu');
+      if (existingMenu) {
+        existingMenu.remove();
+      }
+
+      // Create context menu
+      const menu = document.createElement('div');
+      menu.id = 'pageContextMenu';
+      menu.className = 'page-context-menu';
+      menu.style.display = 'block';
+      menu.innerHTML = `
+        <div class="page-context-menu-item" onclick="handlePageAction('${tab.id}', 'new')">New</div>
+        <div class="page-context-menu-item" onclick="handlePageAction('${tab.id}', 'delete')">Delete</div>
+        <div class="page-context-menu-item" onclick="handlePageAction('${tab.id}', 'duplicate')">Duplicate</div>
+        <div class="page-context-menu-item" onclick="handlePageAction('${tab.id}', 'rename')">Rename Page</div>
+      `;
+
+      // Position menu
+      document.body.appendChild(menu);
+      const rect = pageItem.getBoundingClientRect();
+      menu.style.left = rect.left + 'px';
+      menu.style.top = (rect.top - menu.offsetHeight - 5) + 'px';
+
+      // Close menu when clicking outside
+      setTimeout(() => {
+        document.addEventListener('click', function closeMenu(e) {
+          if (!menu.contains(e.target) && e.target !== pageItem) {
+            menu.remove();
+            document.removeEventListener('click', closeMenu);
+          }
+        }, { once: true });
+      }, 10);
+    }
+
+    // Handle page context menu actions
+    function handlePageAction(tabId, action) {
+      const tab = tabs.find(t => t.id === tabId);
+      if (!tab) return;
+
+      const menu = document.getElementById('pageContextMenu');
+      if (menu) menu.remove();
+
+      switch(action) {
+        case 'new':
+          createNewPage();
+          break;
+        case 'delete':
+          closeTab(tabId);
+          break;
+        case 'duplicate':
+          // Find the base name and generate next number
+          const baseName = tab.name.replace(/\(\d+\)$/, '');
+          let maxNumber = 0;
+          
+          // Find the highest number used for this base name
+          tabs.forEach(t => {
+            const match = t.name.match(/^(.+?)\((\d+)\)$/);
+            if (match && match[1] === baseName) {
+              maxNumber = Math.max(maxNumber, parseInt(match[2]));
+            }
+          });
+          
+          // Generate new name with next number
+          const newName = maxNumber === 0 ? baseName : `${baseName}(${maxNumber + 1})`;
+          const newTabId = createTab(newName);
+          loadWorkspaceContent(newName);
+          break;
+        case 'rename':
+          const pageItem = document.querySelector('.nav-page-item.active');
+          if (pageItem) {
+            editBottomNavPageName(tab, pageItem);
+          }
+          break;
+      }
     }
 
     function switchTab(tabId) {
@@ -1472,6 +2517,71 @@
           loadWorkspaceContent(tab.name);
         }
       }
+    }
+
+    // Navigate to previous page (left chevron)
+    function navigatePreviousPage() {
+      if (tabs.length === 0) return;
+      
+      const currentIndex = tabs.findIndex(t => t.id === activeTabId);
+      const previousIndex = currentIndex > 0 ? currentIndex - 1 : tabs.length - 1;
+      switchTab(tabs[previousIndex].id);
+    }
+
+    // Navigate to next page (right chevron)
+    function navigateNextPage() {
+      if (tabs.length === 0) return;
+      
+      const currentIndex = tabs.findIndex(t => t.id === activeTabId);
+      const nextIndex = currentIndex < tabs.length - 1 ? currentIndex + 1 : 0;
+      switchTab(tabs[nextIndex].id);
+    }
+
+    // Edit page name in bottom nav (double-click to edit)
+    function editBottomNavPageName(tab, pageItem) {
+      pageItem.contentEditable = true;
+      pageItem.style.background = '#3b82f6';
+      pageItem.style.color = 'white';
+      pageItem.style.padding = '2px 6px';
+      pageItem.style.borderRadius = '4px';
+      pageItem.style.outline = 'none';
+      pageItem.style.textDecoration = 'none';
+      
+      // Focus and select all text
+      setTimeout(() => {
+        pageItem.focus();
+        const range = document.createRange();
+        range.selectNodeContents(pageItem);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }, 10);
+      
+      // Handle blur to save
+      pageItem.addEventListener('blur', function saveName() {
+        this.contentEditable = false;
+        const newName = this.textContent.trim() || 'New Page';
+        tab.name = newName;
+        this.textContent = newName;
+        this.style.background = '';
+        this.style.color = '';
+        this.style.padding = '';
+        this.style.borderRadius = '';
+        
+        // Update tab in top bar
+        renderTabs();
+        
+        // Remove listener
+        this.removeEventListener('blur', saveName);
+      }, { once: true });
+      
+      // Handle Enter key
+      pageItem.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          this.blur();
+        }
+      }, { once: true });
     }
 
     function closeTab(tabId) {
@@ -1493,6 +2603,25 @@
       createTab('New Page');
     }
 
+    // Create new page from bottom nav plus icon
+    function createNewPage() {
+      const tabId = createTab('New Page');
+      const tab = tabs.find(t => t.id === tabId);
+      
+      // Load the content for this tab
+      if (tab) {
+        loadWorkspaceContent(tab.name);
+      }
+      
+      // Find and make the new page name editable in bottom nav
+      setTimeout(() => {
+        const activePageItem = document.querySelector('.nav-page-item.active');
+        if (activePageItem && tab) {
+          editBottomNavPageName(tab, activePageItem);
+        }
+      }, 50);
+    }
+
     function loadWorkspaceContent(workspaceName) {
       const pageContent = document.querySelector('.page-content');
       if (!pageContent) return;
@@ -1501,6 +2630,26 @@
         .then(response => response.text())
         .then(html => {
           pageContent.innerHTML = html;
+          
+          // Re-render bottom nav pages after content loads
+          setTimeout(() => {
+            renderBottomNavPages();
+            
+            // Re-attach event handlers for bottom nav icons
+            const leftChevron = document.querySelector('.page-bottom-nav .nav-arrow[onclick="navigatePreviousavPage()"]');
+            const rightChevron = document.querySelector('.page-bottom-nav .nav-arrow[onclick="navigateNextPage()"]');
+            const plusIcon = document.querySelector('.page-bottom-nav .nav-add-circle[onclick="createNewPage()"]');
+            
+            if (leftChevron) {
+              leftChevron.onclick = navigatePreviousPage;
+            }
+            if (rightChevron) {
+              rightChevron.onclick = navigateNextPage;
+            }
+            if (plusIcon) {
+              plusIcon.onclick = createNewPage;
+            }
+          }, 50);
           
           // Update breadcrumb with workspace name
           const breadcrumb = document.getElementById('pageBreadcrumb');
@@ -1513,6 +2662,9 @@
             const notesEditor = document.querySelector('.notes-editor');
             if (notesEditor) {
               notesEditor.textContent = `#${workspaceName}`;
+              
+              // Event listener is already attached globally in card.js using event delegation
+              // No need to add duplicate listener here
             }
           }, 100);
           
@@ -1520,6 +2672,37 @@
           const pageTitle = document.querySelector('.page-title');
           if (pageTitle) {
             pageTitle.textContent = workspaceName;
+          }
+          
+          // Add click handlers to add menu items using event delegation
+          const addMenu = document.getElementById('addMenuList');
+          if (addMenu) {
+            addMenu.addEventListener('click', function(e) {
+              const clickedItem = e.target.closest('.menu-item');
+              if (clickedItem) {
+                const text = clickedItem.textContent.trim();
+                // Close the menu
+                this.classList.remove('show');
+                
+                if (text === 'Task List') {
+                  // Add a new task row
+                  addTaskRow();
+                } else if (text === 'Card') {
+                  // Show Cards section and open the card modal
+                  showCardsSection();
+                  openCardModal();
+                } else if (text === 'Image') {
+                  // Upload image
+                  triggerImageUpload();
+                } else if (text === 'Upload File') {
+                  // Upload file
+                  triggerFileUpload();
+                } else if (text === 'Note') {
+                  // Show Notes editor
+                  showNotesEditor();
+                }
+              }
+            });
           }
         })
         .catch(error => {
@@ -1594,14 +2777,72 @@
       alert('Add Column functionality coming soon!');
     }
 
+    // Open vault settings with Display tab for column selection
+    function openColumnSettings() {
+      const modal = document.getElementById('vaultSettingsModal');
+      const titleElement = document.querySelector('.vault-settings-title');
+      if (modal) {
+        // Update title
+        if (titleElement) {
+          titleElement.textContent = 'Select Columns to Display';
+        }
+        modal.style.display = 'flex';
+        // Switch to Display tab
+        switchSettingsTab('display');
+      }
+    }
+
+    // Toggle Documents section collapse/expand
+    function toggleDocumentsSection() {
+      const documentsHeader = document.getElementById('documentsHeaderSection');
+      const documentsContent = document.querySelector('.documents-content');
+      const chevron = documentsHeader ? documentsHeader.querySelector('.chevron-icon') : null;
+      
+      if (!documentsHeader || !documentsContent || !chevron) return;
+      
+      const isExpanded = documentsHeader.classList.contains('expanded');
+      const allItems = documentsContent.querySelectorAll('.documents-item');
+      
+      if (isExpanded) {
+        // Collapse - hide the content
+        documentsHeader.classList.remove('expanded');
+        chevron.setAttribute('src', 'assets/images/chevron-right.svg');
+        documentsContent.style.display = 'none';
+        allItems.forEach(item => item.style.display = 'none');
+      } else {
+        // Expand - show the content
+        documentsHeader.classList.add('expanded');
+        chevron.setAttribute('src', 'assets/images/chevron-down.svg');
+        documentsContent.style.display = 'block';
+        allItems.forEach(item => item.style.display = 'block');
+      }
+    }
+
     // Load sidebar when page loads
     document.addEventListener('DOMContentLoaded', function() {
       loadSidebar();
       
-      // Add context menu to documents header
+      // Add collapse/expand and context menu functionality to documents header
       setTimeout(() => {
         const documentsHeader = document.getElementById('documentsHeaderSection');
         if (documentsHeader) {
+          // Initially mark as expanded
+          documentsHeader.classList.add('expanded');
+          
+          // Add click handler for collapse/expand
+          documentsHeader.addEventListener('click', function(e) {
+            // Only toggle if clicking on the header itself, not on context menu triggers
+            if (!e.target.closest('#documentsContextMenu')) {
+              const clickedChevron = e.target.closest('.chevron-icon');
+              const clickedContextMenu = e.target.closest('.context-menu');
+              
+              // Toggle only if clicked outside context menu
+              if (!clickedContextMenu && (!clickedChevron || clickedChevron)) {
+                toggleDocumentsSection();
+              }
+            }
+          });
+          
           documentsHeader.oncontextmenu = function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -1649,6 +2890,12 @@
         }
       }, 500);
     });
+
+    // Load navbar component
+    const navbarScript = document.createElement('script');
+    navbarScript.type = 'module';
+    navbarScript.src = 'assets/js/navbar.js';
+    document.head.appendChild(navbarScript);
   </script>
 </body>
 </html>

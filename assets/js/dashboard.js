@@ -1,4 +1,13 @@
-(function(){
+(async function(){
+	// Import auth functions
+	const { isAuthenticated, signOut, getCurrentUser } = await import('./auth-api.js');
+	
+	// Check authentication on page load
+	if (!isAuthenticated()) {
+		window.location.href = 'login.html';
+		return;
+	}
+
 	// Basic used-space UI initializer — update values from server/JS as needed
 	function setUsedSpace(usedGB, totalGB){
 		const track = document.querySelector('.used-space-fill');
@@ -55,14 +64,19 @@
 		console.log('Settings loaded');
 	}
 
-	function logout(event) {
+	async function logout(event) {
 		event.preventDefault();
 		// Remove active class from all menu items
 		document.querySelectorAll('.menu li').forEach(item => item.classList.remove('active'));
 		// Add active class to clicked item
 		event.currentTarget.classList.add('active');
 		console.log('Logout clicked');
-		// Add your logout logic here
+		
+		// Sign out using centralized auth API
+		signOut();
+		
+		// Redirect to login page
+		window.location.href = 'login.html';
 	}
 
 	// Vault functionality moved to vault_component.js

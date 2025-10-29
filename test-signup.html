@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        input {
+            padding: 5px;
+            margin: 5px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Signup Endpoint Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Different Endpoint Variations</h2>
+        <p>Since login works at <code>/Account/</code>, let's test different signup endpoints:</p>
+        
+        <input type="text" id="firstName" placeholder="First Name" value="Test">
+        <input type="text" id="lastName" placeholder="Last Name" value="User"><br><br>
+        <input type="text" id="email" placeholder="Email" value="test@example.com">
+        <input type="password" id="password" placeholder="Password" value="Test123!"><br><br>
+        
+        <button onclick="testEndpoint('/Account/Register')">Test: /Account/Register</button>
+        <button onclick="testEndpoint('/Account/Register/')">Test: /Account/Register/</button>
+        <button onclick="testEndpoint('/Register')">Test: /Register</button>
+        <button onclick="testEndpoint('/Account')">Test: /Account (same as login)</button>
+        
+        <pre id="result"></pre>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Preflight (OPTIONS) Request</h2>
+        <button onclick="testPreflight('/Account/Register')">Test OPTIONS for /Account/Register</button>
+        <pre id="preflightResult"></pre>
+    </div>
+
+    <script>
+        const BASE_URL = 'https://api.rjautonomous.com';
+        
+        function logResult(id, data, isError = false) {
+            const result = document.getElementById(id);
+            result.textContent = JSON.stringify(data, null, 2);
+            result.className = isError ? 'error' : 'success';
+        }
+        
+        async function testEndpoint(endpoint) {
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            const url = `${BASE_URL}${endpoint}`;
+            const payload = {
+                username: email,
+                email: email,
+                password: password,
+                firstName: firstName,
+                lastName: lastName,
+                companyName: 'freelance'
+            };
+            
+            try {
+                console.log(`Testing: ${url}`);
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                console.log('Response:', response);
+                
+                const data = await response.json().catch(() => ({ text: 'No JSON response' }));
+                
+                logResult('result', {
+                    endpoint: endpoint,
+                    url: url,
+                    status: response.status,
+                    ok: response.ok,
+                    statusText: response.statusText,
+                    headers: Object.fromEntries(response.headers.entries()),
+                    data: data
+                }, !response.ok);
+            } catch (error) {
+                logResult('result', {
+                    endpoint: endpoint,
+                    url: url,
+                    error: error.message,
+                    name: error.name,
+                    stack: error.stack?.split('\n').slice(0, 5).join('\n')
+                }, true);
+            }
+        }
+        
+        async function testPreflight(endpoint) {
+            const url = `${BASE_URL}${endpoint}`;
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'OPTIONS',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                logResult('preflightResult', {
+                    endpoint: endpoint,
+                    url: url,
+                    status: response.status,
+                    ok: response.ok,
+                    headers: Object.fromEntries(response.headers.entries()),
+                    note: 'Preflight should return 200/204 with CORS headers'
+                });
+            } catch (error) {
+                logResult('preflightResult', {
+                    endpoint: endpoint,
+                    error: error.message,
+                    note: 'Preflight failed - backend needs to handle OPTIONS requests'
+                }, true);
+            }
+        }
+    </script>
+</body>
+</html>
+

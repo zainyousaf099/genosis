@@ -1,0 +1,151 @@
+/* Main Navigation Bar Styles - Based on settings.css */
+.main-navbar {
+  width: 40px;
+  background-color: #fff;
+  border-right: 1px solid #e0e4e8;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.navbar-menu {
+  flex-grow: 1;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar-item {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 40px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.navbar-item:hover {
+  background-color: #f0f4f9;
+}
+
+.navbar-item.active {
+  background-color: #E0F1FE;
+}
+
+.navbar-item.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: #007ECC;
+}
+
+.navbar-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.navbar-icon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  display: block;
+  /* Ensure all icons are gray - filter to grayscale */
+  filter: grayscale(100%) brightness(0.7);
+}
+
+.navbar-item:hover .navbar-icon,
+.navbar-item.active .navbar-icon {
+  opacity: 1;
+  filter: grayscale(100%) brightness(0.8);
+}
+
+/* Tooltip */
+.navbar-icon-wrapper[data-tooltip] {
+  position: relative;
+}
+
+.navbar-icon-wrapper[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: #1f2937;
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-icon-wrapper[data-tooltip]:hover::before {
+  content: '';
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  border: 6px solid transparent;
+  border-right-color: #1f2937;
+  z-index: 1001;
+  pointer-events: none;
+}
+
+/* Smooth transition for tab switching */
+.navbar-item {
+  transition: all 0.2s ease;
+}
+
+/* Ensure page content accounts for navbar */
+body {
+  margin-left: 0;
+}
+
+.page-container,
+.main-container {
+  transition: margin-left 0.3s ease;
+}
+
+/* Update margin-left for navbar width (40px instead of 48px) */
+.page-container[style*="margin-left: 48px"],
+.main-container[style*="margin-left: 48px"] {
+  margin-left: 40px !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-navbar {
+    width: 40px;
+  }
+  
+  .navbar-icon {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .page-container[style*="margin-left"],
+  .main-container[style*="margin-left"] {
+    margin-left: 40px !important;
+  }
+}
+

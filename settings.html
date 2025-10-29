@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="stylesheet" href="assets/css/settings.css" />
+</head>
+
+<body>
+    <div class="page-container settings-container" style="margin-left: 40px;">
+        <!-- Main Navbar Container (loaded via navbar.js) -->
+        <div id="main-navbar-container"></div>
+
+        <aside class="file-navigation">
+            <div class="search-bar">
+                <input type="text" placeholder="Search" />
+            </div>
+            <div class="folder-tree-container">
+                <ul class="folder-tree">
+                    <li class="settings-menu-item active" data-panel="account">
+                        <img src="assets/images/user-01.svg" class="submenu-icon"> Account
+                    </li>
+                    <li class="settings-menu-item" data-panel="subscription">
+                        <img src="assets/images/credit-card-02.svg" class="submenu-icon"> Subscription
+                    </li>
+                    <li class="settings-menu-item" data-panel="storage">
+                        <img src="assets/images/cloud.svg" class="submenu-icon"> Storage
+                    </li>
+                    <li class="settings-menu-item" data-panel="notifications">
+                        <img src="assets/images/bell-ringing-04.svg" class="submenu-icon"> Notifications
+                    </li>
+                    <li class="settings-menu-item" data-panel="appearance">
+                        <img src="assets/images/moon-01.svg" class="submenu-icon"> Appearance
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <section class="page-content">
+            <div class="settings-panels-wrapper">
+                <div class="settings-header">
+                    <div class="header-left">
+                        <h1 class="settings-title">Settings</h1>
+                        <div class="settings-subtitle">Manage and update your account info.</div>
+                    </div>
+                    <div class="header-buttons">
+                        <button class="btn btn-cancel" onclick="cancelSettings()">Cancel</button>
+                        <button class="btn btn-save" onclick="saveSettings()">Save</button>
+                        <button class="btn btn-save" onclick="logout()">Logout</button>
+                    </div>
+                </div>
+
+                <!-- Account Panel -->
+                <div class="content-section settings-panel" id="panel-account">
+                    <!-- General Section -->
+                    <div class="form-row">
+                        <div class="header-left">
+                            <h2 class="section-title">General</h2>
+                            <p class="section-subtitle">Update your account settings.</p>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" value="john_doe_12" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" value="johndoe123@gmail.com" readonly>
+                                <div class="form-note">To change your email, please <a href="#" onclick="contactUs()">contact us.</a></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Section -->
+                    <div class="form-row" style="margin-top: 40px; padding-top: 40px; border-top: 1px solid #e5e7eb;">
+                        <div class="header-left">
+                            <h2 class="section-title">Security</h2>
+                            <p class="section-subtitle">Update your password.</p>
+                        </div>
+
+                        <div class="form-grid-security">
+                            <div class="form-group">
+                                <label for="current-password" class="form-label">Current password</label>
+                                <input type="password" class="form-control" id="current-password" placeholder="••••••••">
+                                <div id="current-password-error" class="error-message"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="new-password" class="form-label">New password</label>
+                                <input type="password" class="form-control" id="new-password" placeholder="••••••••">
+                                <div class="form-note">Your new password must be more than 8 characters.</div>
+                                <div id="new-password-error" class="error-message"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="confirm-password" class="form-label">Confirm new password</label>
+                                <input type="password" class="form-control" id="confirm-password" placeholder="••••••••">
+                                <div id="confirm-password-error" class="error-message"></div>
+                            </div>
+                        </div>
+                        <div id="debug-msg"></div>
+                    </div>
+
+                    <!-- Security Action Buttons -->
+                    <div class="security-actions">
+                        <button class="btn btn-cancel">Cancel</button>
+                        <button class="btn btn-save" id="update-password-button">Update password</button>
+                    </div>
+
+                    <!-- Storage Section -->
+                    <div class="form-row" style="margin-top: 40px; padding-top: 40px; border-top: 1px solid #e5e7eb;">
+                        <div class="header-left">
+                            <h2 class="section-title">Storage</h2>
+                            <p class="section-subtitle">Your Storage Details.</p>
+                        </div>
+
+                        <div class="form-grid-security">
+                            <div class="storage-section">
+                                <h3>Storage</h3>
+                                <div class="used-info">Used: 512 GB / 1 TB</div>
+                                <div class="storage-progress-container">
+                                    <div class="storage-progress" style="width:51.2%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subscription Panel -->
+                <div class="content-section settings-panel hidden" id="panel-subscription">
+                    <div class="form-row">
+                        <div class="header-left">
+                            <h2 class="section-title">Subscription Plan</h2>
+                            <p class="section-subtitle">Manage and update your account info. You are currently using free version of this app.</p>
+                            <a class="section-learn">Learn More.</a>
+                        </div>
+
+                        <div class="pricing-plans">
+                            <!-- Basic Plan -->
+                            <label class="plan-option selected">
+                                <div class="plans-icon">
+                                    <img src="assets/images/Featured-icon.svg">
+                                </div>
+                                <div class="plan-details">
+                                    <span class="plan-name">Basic plan </span><span class="plan-price">$0+</span>
+                                    <p class="plan-description">Ideal for individuals to automate workflows and accelerate delivery.</p>
+                                </div>
+                                <div class="plan-checkbox">
+                                    <input type="checkbox" name="plan" id="basic-plan" checked>
+                                </div>
+                            </label>
+
+                            <!-- Collaboration Plan -->
+                            <label class="plan-option">
+                                <div class="plans-icon">
+                                    <img src="assets/images/Featured-icon-1.svg">
+                                </div>
+                                <div class="plan-details">
+                                    <span class="plan-name">Collaboration plan </span><span class="plan-price">$5+</span>
+                                    <p class="plan-description">Best for small teams looking to optimize data flows and scale their operations.</p>
+                                </div>
+                                <div class="plan-checkbox">
+                                    <input type="checkbox" name="plan" id="collaboration-plan">
+                                </div>
+                            </label>
+
+                            <!-- Enterprise Plan -->
+                            <label class="plan-option">
+                                <div class="plans-icon">
+                                    <img src="assets/images/Featured-icon-2.svg">
+                                </div>
+                                <div class="plan-details">
+                                    <span class="plan-name">Enterprise plan </span><span class="plan-price">$99+</span>
+                                    <p class="plan-description">Best for small teams looking to optimize data flows and scale their operations.</p>
+                                </div>
+                                <div class="plan-checkbox">
+                                    <input type="checkbox" name="plan" id="enterprise-plan">
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Panel -->
+                <div class="content-section settings-panel hidden" id="panel-notifications">
+                    <div class="form-row">
+                        <div class="header-left">
+                            <h2 class="section-title">Notifications</h2>
+                            <p class="section-subtitle">Customize your email notifications and never miss an update.</p>
+                        </div>
+                        <div class="notification-settings">
+                            <div class="notification-row">
+                                <div class="notification-checkbox">
+                                    <input type="checkbox" id="new-content-announcements" checked>
+                                </div>
+                                <div class="notification-details">
+                                    <label for="new-content-announcements" class="notification-title">New Content Announcements</label>
+                                    <p class="notification-description">Get latest updates on new content releases and features.</p>
+                                </div>
+                            </div>
+                            <div class="notification-row">
+                                <div class="notification-checkbox">
+                                    <input type="checkbox" id="weekly-summary" checked>
+                                </div>
+                                <div class="notification-details">
+                                    <label for="weekly-summary" class="notification-title">Weekly Summary</label>
+                                    <p class="notification-description">Keep track of your work progress and receive a detailed weekly report.</p>
+                                </div>
+                            </div>
+                            <div class="notification-row">
+                                <div class="notification-checkbox">
+                                    <input type="checkbox" id="new-job-updates" checked>
+                                </div>
+                                <div class="notification-details">
+                                    <label for="new-job-updates" class="notification-title">New Job Updates</label>
+                                    <p class="notification-description">New job and career postings delivered weekly, right to your inbox.</p>
+                                </div>
+                            </div>
+                            <div class="notification-row">
+                                <div class="notification-checkbox">
+                                    <input type="checkbox" id="community-events" checked>
+                                </div>
+                                <div class="notification-details">
+                                    <label for="community-events" class="notification-title">Community Events</label>
+                                    <p class="notification-description">Keep up to date with the latest live design events from the Uizard community.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row" style="margin-top: 40px; padding-top: 40px; border-top: 1px solid #e5e7eb;">
+                        <div class="header-left">
+                            <h2 class="section-title">Unsubscribe from everything</h2>
+                            <p class="section-subtitle">We'll continue to only send necessary emails about your account.</p>
+                        </div>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="unsubscribe-toggle" class="toggle-input">
+                            <label for="unsubscribe-toggle" class="toggle-label"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Appearance Panel -->
+                <div class="content-section settings-panel hidden" id="panel-appearance">
+                    <div class="form-row">
+                        <div class="header-left">
+                            <h2 class="section-title">Appearance</h2>
+                            <p class="section-subtitle">Customize your layout.</p>
+                        </div>
+                        <div class="appearance-settings">
+                            <div class="appearance-row">
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="appearance-toggle" class="toggle-input">
+                                    <label for="appearance-toggle" class="toggle-label"></label>
+                                </div>
+                                <div class="appearance-details">
+                                    <label for="appearance-toggle" class="appearance-title">Dark Mode</label>
+                                </div>
+                            </div>
+                            <div class="appearance-row">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="font-select" class="form-label">Font</label>
+                                        <select class="form-select" id="font-select">
+                                            <option value="inter">Inter</option>
+                                            <option value="sf-pro">SF Pro</option>
+                                            <option value="helvetica">Helvetica</option>
+                                            <option value="arial">Arial</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Storage Panel -->
+                <div class="content-section settings-panel hidden" id="panel-storage">
+                    <div class="form-row">
+                        <div class="header-left">
+                            <h2 class="section-title">Storage</h2>
+                            <p class="section-subtitle">Your Storage Details.</p>
+                        </div>
+                        <div class="form-grid">
+                            <div class="storage-section">
+                                <h3>Storage</h3>
+                                <div class="used-info">Used: 512 GB / 1 TB</div>
+                                <div class="storage-progress-container">
+                                    <div class="storage-progress" style="width:51.2%;"></div>
+                                </div>
+                                <div class="btn1-wrapper">
+                                    <button class="btn1 btn-save upgrade-storage-btn" id="open-upgrade-storage">Upgrade storage</button>
+                                </div>
+                            </div>
+
+                            <!-- Modal -->
+                            <div class="modal-overlay" id="upgradeModal">
+                                <div class="modal-content">
+                                    <button class="close-btn" onclick="closeModal()">×</button>
+                                    <h2>Upgrade Storage</h2>
+
+                                    <label for="storage">Storage</label>
+                                    <div class="storage-select-group">
+                                        <select id="storage" onchange="updatePrice()">
+                                            <option value="">Select</option>
+                                            <option value="50GB">50GB</option>
+                                            <option value="100GB">100GB</option>
+                                            <option value="250GB">250GB</option>
+                                            <option value="500GB">500GB</option>
+                                            <option value="1TB">1TB</option>
+                                            <option value="2TB">2TB</option>
+                                            <option value="5TB">5TB</option>
+                                            <option value="10TB">10TB</option>
+                                        </select>
+                                        <span class="price" id="price">$0</span>
+                                    </div>
+
+                                    <div class="modal-buttons">
+                                        <button class="btn-outline" onclick="closeModal()">Cancel</button>
+                                        <button class="btn-primary" onclick="upgrade()">Upgrade</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script type="module" src="assets/js/navbar.js"></script>
+    <script src="assets/js/settings.js"></script>
+</body>
+
+</html>
+
