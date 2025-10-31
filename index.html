@@ -3,11 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Genossis | Login</title>
+  <title>Genossis</title>
   <link rel="stylesheet" href="assets/css/style.css" />
-  <script>
-    // Redirect to login page
-    window.location.href = 'login.html';
+  <script type="module">
+    // Check if user is authenticated and redirect accordingly
+    const user = localStorage.getItem('currentUser');
+    if (user) {
+      window.location.href = 'dashboard.html';
+    } else {
+      window.location.href = 'login.html';
+    }
   </script>
 </head>
 <body>
