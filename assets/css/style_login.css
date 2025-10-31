@@ -29,6 +29,41 @@ h2 {
 .login-form {
     text-align: left;
     margin-bottom: 20px;
+    position: relative; /* allow anchored toasts to position inside */
+}
+
+.login-message-container {
+    position: relative;
+    min-height: 44px; /* reserve space for centered toast */
+    margin-bottom: 12px;
+}
+/* Fallback inline message styles (used if toaster isn't loaded) */
+.login-error {
+    background-color: #fee2e2;
+    color: #9b1c1c;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border: 1px solid #fecaca;
+    font-size: 14px;
+}
+.login-success {
+    background-color: #ecfdf5;
+    color: #065f46;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border: 1px solid #bbf7d0;
+    font-size: 14px;
+}
+.login-info {
+    background-color: #eff6ff;
+    color: #1e3a8a;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border: 1px solid #bfdbfe;
+    font-size: 14px;
 }
 .login-form label {
     display: block;
@@ -47,6 +82,43 @@ h2 {
     font-size: 1rem;
     box-sizing: border-box;
     transition: border-color 0.2s, box-shadow 0.2s;
+}
+.password-input-wrapper {
+    position: relative;
+    margin-bottom: 16px;
+}
+.password-input-wrapper input {
+    width: 100%;
+    padding: 10px 40px 10px 10px;
+    margin-bottom: 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    transition: color 0.2s;
+}
+.toggle-password:hover {
+    color: #0074d9;
+}
+.toggle-password .eye-icon {
+    width: 20px;
+    height: 20px;
+    margin-top: -18px;
 }
 
 .login-form input[type="text"]:focus,

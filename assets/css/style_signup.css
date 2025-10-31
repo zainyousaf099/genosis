@@ -58,6 +58,28 @@ h2 {
     text-align: left;
     margin-bottom: 20px;
 }
+.signup-form { position: relative; }
+.signup-message-container { position: relative; min-height: 44px; margin-bottom: 12px; }
+
+/* fallback inline styles */
+.signup-error {
+    background-color: #fee2e2;
+    color: #9b1c1c;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border: 1px solid #fecaca;
+    font-size: 14px;
+}
+.signup-success {
+    background-color: #ecfdf5;
+    color: #065f46;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border: 1px solid #bbf7d0;
+    font-size: 14px;
+}
 .signup-form label {
     display: block;
     margin-bottom: 6px;
@@ -72,6 +94,41 @@ h2 {
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1rem;
+}
+.password-input-wrapper {
+    position: relative;
+    margin-bottom: 16px;
+}
+.password-input-wrapper input {
+    width: 100%;
+    padding: 10px 40px 10px 10px;
+    margin-bottom: 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    transition: color 0.2s;
+}
+.toggle-password:hover {
+    color: #0074d9;
+}
+.toggle-password .eye-icon {
+    width: 20px;
+    height: 20px;
+    margin-top: -18px;
 }
 .signup-options {
     margin-bottom: 18px;

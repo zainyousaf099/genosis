@@ -7,59 +7,112 @@ import apiClient from './api-client.js';
 
 // Get form elements
 const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+const messageContainer = forgotPasswordForm?.querySelector('.login-message-container') || null;
 const emailInput = document.getElementById('email');
 const submitButton = forgotPasswordForm?.querySelector('button[type="submit"]');
 
-// Show error message
-function showError(message) {
-    const existingError = document.querySelector('.login-error');
-    if (existingError) {
-        existingError.remove();
+// Add styles for validation
+const validationStyle = document.createElement('style');
+validationStyle.textContent = `
+    .input-error {
+        border: 2px solid #ef4444 !important;
+        background-color: #fef2f2 !important;
     }
+    .input-error-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #ef4444;
+        font-weight: bold;
+        font-size: 18px;
+        pointer-events: none;
+    }
+    .input-wrapper {
+        position: relative;
+        display: block;
+    }
+`;
+document.head.appendChild(validationStyle);
 
+// Helper function to show field error
+function showFieldError(input) {
+    if (!input) return;
+    
+    // Add error class to input
+    input.classList.add('input-error');
+    
+    // Wrap input in relative container if not already wrapped
+    if (!input.parentElement.classList.contains('input-wrapper')) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'input-wrapper';
+        input.parentNode.insertBefore(wrapper, input);
+        wrapper.appendChild(input);
+    }
+    
+    // Add error icon if not exists
+    const wrapper = input.parentElement;
+    let errorIcon = wrapper.querySelector('.input-error-icon');
+    if (!errorIcon) {
+        errorIcon = document.createElement('span');
+        errorIcon.className = 'input-error-icon';
+        errorIcon.textContent = '!';
+        wrapper.appendChild(errorIcon);
+    }
+}
+
+// Helper function to clear field error
+function clearFieldError(input) {
+    if (!input) return;
+    input.classList.remove('input-error');
+    const wrapper = input.parentElement;
+    if (wrapper && wrapper.classList.contains('input-wrapper')) {
+        const errorIcon = wrapper.querySelector('.input-error-icon');
+        if (errorIcon) {
+            errorIcon.remove();
+        }
+    }
+}
+
+// Clear errors on input
+if (emailInput) {
+    emailInput.addEventListener('input', function() {
+        clearFieldError(this);
+    });
+}
+
+// Show error message using toaster in top-right corner
+function showError(message) {
+    document.querySelectorAll('.login-error, .login-success').forEach(el => el.remove());
+    if (window.toast) {
+        window.toast.error(message);
+        return;
+    }
     const errorDiv = document.createElement('div');
     errorDiv.className = 'login-error';
-    errorDiv.style.cssText = `
-        background-color: #fee2e2;
-        color: #dc2626;
-        padding: 12px;
-        border-radius: 8px;
-        margin-bottom: 16px;
-        border: 1px solid #fecaca;
-        font-size: 14px;
-        white-space: pre-line;
-        line-height: 1.5;
-    `;
     errorDiv.textContent = message;
-    
-    if (forgotPasswordForm) {
+    if (messageContainer) {
+        messageContainer.innerHTML = '';
+        messageContainer.appendChild(errorDiv);
+    } else if (forgotPasswordForm) {
         forgotPasswordForm.insertBefore(errorDiv, forgotPasswordForm.firstChild);
     }
 }
 
-// Show success message
+// Show success message using toaster in top-right corner
 function showSuccess(message) {
-    const existingSuccess = document.querySelector('.login-success');
-    if (existingSuccess) {
-        existingSuccess.remove();
+    document.querySelectorAll('.login-error, .login-success').forEach(el => el.remove());
+    if (window.toast) {
+        window.toast.success(message);
+        return;
     }
-
     const successDiv = document.createElement('div');
     successDiv.className = 'login-success';
-    successDiv.style.cssText = `
-        background-color: #d1fae5;
-        color: #065f46;
-        padding: 12px;
-        border-radius: 8px;
-        margin-bottom: 16px;
-        border: 1px solid #a7f3d0;
-        font-size: 14px;
-        white-space: pre-line;
-        line-height: 1.5;
-    `;
     successDiv.textContent = message;
-    
-    if (forgotPasswordForm) {
+    if (messageContainer) {
+        messageContainer.innerHTML = '';
+        messageContainer.appendChild(successDiv);
+    } else if (forgotPasswordForm) {
         forgotPasswordForm.insertBefore(successDiv, forgotPasswordForm.firstChild);
     }
 }
@@ -78,17 +131,35 @@ if (forgotPasswordForm) {
         // Get form values
         const email = emailInput?.value.trim();
 
-        // Validation
+        // Collect all validation errors
+        let errors = [];
+        let firstErrorField = null;
+
+        // Validate all fields and mark errors
         if (!email) {
-            showError('Please enter your email address.');
+            showFieldError(emailInput);
+            errors.push('Email address is required');
+            if (!firstErrorField) firstErrorField = emailInput;
+        } else {
+            // Basic email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showFieldError(emailInput);
+                errors.push('Please enter a valid email address');
+                if (!firstErrorField) firstErrorField = emailInput;
+            }
+        }
+
+        // If there are errors, show them and stop
+        if (errors.length > 0) {
+            showError(errors[0]);
+            firstErrorField?.focus();
             return;
         }
 
-        // Basic email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            showError('Please enter a valid email address.');
-            return;
+        // Show loader
+        if (window.loader) {
+            window.loader.show('Sending reset link...');
         }
 
         // Disable submit button
@@ -103,8 +174,20 @@ if (forgotPasswordForm) {
                 email: email
             });
             
+            // Update loader message
+            if (window.loader) {
+                window.loader.updateMessage('Reset link sent!');
+            }
+            
             // Show success message
             showSuccess('Password reset link has been sent to your email.\nPlease check your inbox and follow the instructions to reset your password.');
+            
+            // Hide loader after short delay
+            setTimeout(() => {
+                if (window.loader) {
+                    window.loader.hide();
+                }
+            }, 1000);
             
             // Optionally redirect after showing message
             setTimeout(() => {
@@ -112,6 +195,11 @@ if (forgotPasswordForm) {
                 // window.location.href = 'check-email.html';
             }, 5000);
         } catch (error) {
+            // Hide loader
+            if (window.loader) {
+                window.loader.hide();
+            }
+            
             // Handle errors
             let errorMessage = 'Failed to send reset link. Please try again.';
             

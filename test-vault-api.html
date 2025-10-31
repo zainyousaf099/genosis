@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vault API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+        button.success {
+            background: #10b981;
+        }
+        button.success:hover {
+            background: #059669;
+        }
+        #output {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .status {
+            padding: 8px 12px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .status.info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .test-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .test-section:last-child {
+            border-bottom: none;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #374151;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Vault API Test Suite</h1>
+        <p class="subtitle">Test your vault API connectivity and authentication</p>
+
+        <div class="test-section">
+            <h3>1. Check Authentication</h3>
+            <button onclick="checkAuth()">Check if User is Logged In</button>
+            <button onclick="viewUser()" class="success">View User Data</button>
+        </div>
+
+        <div class="test-section">
+            <h3>2. Test API Endpoints</h3>
+            <button onclick="testAPI()">Test API (GET /Vault/)</button>
+            <button onclick="testAPIWithUser()">Test with User ID Filter</button>
+            <button onclick="testAPIRaw()">Test Raw Fetch (No Auth)</button>
+        </div>
+
+        <div class="test-section">
+            <h3>3. Import & Test Modules</h3>
+            <button onclick="testModules()">Test Module Imports</button>
+            <button onclick="testVaultComponent()">Test Vault Component</button>
+        </div>
+
+        <div id="output"></div>
+    </div>
+
+    <script type="module">
+        // Import necessary modules
+        import apiClient from './assets/js/api-client.js';
+        import { getCurrentUser, isAuthenticated } from './assets/js/auth-api.js';
+
+        const output = document.getElementById('output');
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const statusClass = type === 'success' ? 'success' : type === 'error' ? 'error' : 'info';
+            output.innerHTML += `<div class="status ${statusClass}">[${timestamp}] ${message}</div>\n`;
+            console.log(message);
+        }
+
+        function clear() {
+            output.innerHTML = '';
+        }
+
+        // Check Authentication
+        window.checkAuth = function() {
+            clear();
+            log('Checking authentication status...', 'info');
+            
+            const authenticated = isAuthenticated();
+            const user = getCurrentUser();
+            
+            if (authenticated && user) {
+                log(`✅ User is authenticated!`, 'success');
+                log(`User ID: ${user.id}`, 'info');
+                log(`Username: ${user.username}`, 'info');
+            } else {
+                log(`❌ User is NOT authenticated`, 'error');
+                log(`Please login first at login.html`, 'error');
+            }
+        };
+
+        // View User Data
+        window.viewUser = function() {
+            clear();
+            const user = getCurrentUser();
+            
+            if (user) {
+                log('📋 User Data:', 'success');
+                output.innerHTML += JSON.stringify(user, null, 2);
+            } else {
+                log('❌ No user data found', 'error');
+            }
+        };
+
+        // Test API with apiClient
+        window.testAPI = async function() {
+            clear();
+            log('🔍 Testing API: GET /Vault/', 'info');
+            
+            try {
+                const vaults = await apiClient.get('/Vault/');
+                log(`✅ API Success! Received ${vaults.length} vaults`, 'success');
+                output.innerHTML += '\n' + JSON.stringify(vaults, null, 2);
+            } catch (error) {
+                log(`❌ API Error: ${error.message}`, 'error');
+                output.innerHTML += '\n' + JSON.stringify(error, null, 2);
+            }
+        };
+
+        // Test API with User ID
+        window.testAPIWithUser = async function() {
+            clear();
+            const user = getCurrentUser();
+            
+            if (!user || !user.id) {
+                log('❌ No user logged in', 'error');
+                return;
+            }
+            
+            log(`🔍 Testing API: GET /Vault/?userId=${user.id}`, 'info');
+            
+            try {
+                const vaults = await apiClient.get(`/Vault/?userId=${user.id}`);
+                log(`✅ API Success! Received ${vaults.length} vaults for user ${user.id}`, 'success');
+                
+                // Filter by createdBy
+                const myVaults = vaults.filter(v => v.createdBy === user.id);
+                log(`📊 Vaults created by you: ${myVaults.length}`, 'info');
+                
+                output.innerHTML += '\n' + JSON.stringify(myVaults, null, 2);
+            } catch (error) {
+                log(`❌ API Error: ${error.message}`, 'error');
+                output.innerHTML += '\n' + JSON.stringify(error, null, 2);
+            }
+        };
+
+        // Test Raw Fetch
+        window.testAPIRaw = async function() {
+            clear();
+            log('🔍 Testing Raw Fetch: GET https://api.rjautonomous.com/Vault/', 'info');
+            
+            try {
+                const response = await fetch('https://api.rjautonomous.com/Vault/');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const vaults = await response.json();
+                log(`✅ Raw Fetch Success! Received ${vaults.length} vaults`, 'success');
+                output.innerHTML += '\n' + JSON.stringify(vaults.slice(0, 3), null, 2);
+                log(`\n(Showing first 3 vaults only)`, 'info');
+            } catch (error) {
+                log(`❌ Raw Fetch Error: ${error.message}`, 'error');
+            }
+        };
+
+        // Test Modules
+        window.testModules = async function() {
+            clear();
+            log('🧩 Testing Module Imports...', 'info');
+            
+            try {
+                log('✅ api-client.js imported successfully', 'success');
+                log('✅ auth-api.js imported successfully', 'success');
+                log(`✅ apiClient.baseURL = ${apiClient.baseURL}`, 'info');
+                
+                const user = getCurrentUser();
+                if (user) {
+                    log(`✅ getCurrentUser() works - User ID: ${user.id}`, 'success');
+                } else {
+                    log(`⚠️ getCurrentUser() returned null (not logged in)`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Module Import Error: ${error.message}`, 'error');
+            }
+        };
+
+        // Test Vault Component
+        window.testVaultComponent = function() {
+            clear();
+            log('🧩 Testing Vault Component Functions...', 'info');
+            
+            if (typeof window.loadVaults === 'function') {
+                log('✅ window.loadVaults is available', 'success');
+                log('Calling loadVaults()...', 'info');
+                window.loadVaults();
+            } else {
+                log('❌ window.loadVaults is NOT available', 'error');
+                log('Make sure vault_component.js is loaded', 'error');
+            }
+            
+            if (typeof window.openCreateVaultModal === 'function') {
+                log('✅ window.openCreateVaultModal is available', 'success');
+            } else {
+                log('❌ window.openCreateVaultModal is NOT available', 'error');
+            }
+        };
+
+        // Auto-run auth check on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                log('🚀 Vault API Test Suite Ready', 'success');
+                log('Click buttons above to test different features', 'info');
+            }, 100);
+        });
+    </script>
+</body>
+</html>

@@ -7,61 +7,127 @@ import apiClient from './api-client.js';
 
 // Get form elements
 const setPasswordForm = document.getElementById('setPasswordForm');
+const messageContainer = setPasswordForm?.querySelector('.login-message-container') || null;
 const newPasswordInput = document.getElementById('newPassword');
 const confirmPasswordInput = document.getElementById('confirmPassword');
 const passwordMatchDiv = document.getElementById('passwordMatch');
 const submitButton = setPasswordForm?.querySelector('button[type="submit"]');
 
-// Show error message
-function showError(message) {
-    const existingError = document.querySelector('.login-error');
-    if (existingError) {
-        existingError.remove();
+// Add styles for validation
+const validationStyle = document.createElement('style');
+validationStyle.textContent = `
+    .input-error {
+        border: 2px solid #ef4444 !important;
+        background-color: #fef2f2 !important;
     }
+    .input-error-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #ef4444;
+        font-weight: bold;
+        font-size: 18px;
+        pointer-events: none;
+    }
+    .input-wrapper {
+        position: relative;
+        display: block;
+    }
+`;
+document.head.appendChild(validationStyle);
 
+// Helper function to show field error
+function showFieldError(input) {
+    if (!input) return;
+    
+    // Add error class to input
+    input.classList.add('input-error');
+    
+    // Wrap input in relative container if not already wrapped
+    if (!input.parentElement.classList.contains('input-wrapper')) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'input-wrapper';
+        input.parentNode.insertBefore(wrapper, input);
+        wrapper.appendChild(input);
+    }
+    
+    // Add error icon if not exists
+    const wrapper = input.parentElement;
+    let errorIcon = wrapper.querySelector('.input-error-icon');
+    if (!errorIcon) {
+        errorIcon = document.createElement('span');
+        errorIcon.className = 'input-error-icon';
+        errorIcon.textContent = '!';
+        wrapper.appendChild(errorIcon);
+    }
+}
+
+// Helper function to clear field error
+function clearFieldError(input) {
+    if (!input) return;
+    input.classList.remove('input-error');
+    const wrapper = input.parentElement;
+    if (wrapper && wrapper.classList.contains('input-wrapper')) {
+        const errorIcon = wrapper.querySelector('.input-error-icon');
+        if (errorIcon) {
+            errorIcon.remove();
+        }
+    }
+}
+
+// Password toggle functionality
+document.querySelectorAll('.toggle-password').forEach(button => {
+    button.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        const eyeOpen = this.querySelectorAll('.eye-open');
+        const eyeClosed = this.querySelectorAll('.eye-closed');
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            eyeOpen.forEach(el => el.style.display = 'none');
+            eyeClosed.forEach(el => el.style.display = 'block');
+        } else {
+            input.type = 'password';
+            eyeOpen.forEach(el => el.style.display = 'block');
+            eyeClosed.forEach(el => el.style.display = 'none');
+        }
+    });
+});
+
+// Show error message via toaster in top-right corner
+function showError(message) {
+    document.querySelectorAll('.login-error, .login-success').forEach(el => el.remove());
+    if (window.toast) {
+        window.toast.error(message);
+        return;
+    }
     const errorDiv = document.createElement('div');
     errorDiv.className = 'login-error';
-    errorDiv.style.cssText = `
-        background-color: #fee2e2;
-        color: #dc2626;
-        padding: 12px;
-        border-radius: 8px;
-        margin-bottom: 16px;
-        border: 1px solid #fecaca;
-        font-size: 14px;
-        white-space: pre-line;
-        line-height: 1.5;
-    `;
     errorDiv.textContent = message;
-    
-    if (setPasswordForm) {
+    if (messageContainer) {
+        messageContainer.innerHTML = '';
+        messageContainer.appendChild(errorDiv);
+    } else if (setPasswordForm) {
         setPasswordForm.insertBefore(errorDiv, setPasswordForm.firstChild);
     }
 }
 
-// Show success message
+// Show success message via toaster in top-right corner
 function showSuccess(message) {
-    const existingSuccess = document.querySelector('.login-success');
-    if (existingSuccess) {
-        existingSuccess.remove();
+    document.querySelectorAll('.login-error, .login-success').forEach(el => el.remove());
+    if (window.toast) {
+        window.toast.success(message);
+        return;
     }
-
     const successDiv = document.createElement('div');
     successDiv.className = 'login-success';
-    successDiv.style.cssText = `
-        background-color: #d1fae5;
-        color: #065f46;
-        padding: 12px;
-        border-radius: 8px;
-        margin-bottom: 16px;
-        border: 1px solid #a7f3d0;
-        font-size: 14px;
-        white-space: pre-line;
-        line-height: 1.5;
-    `;
     successDiv.textContent = message;
-    
-    if (setPasswordForm) {
+    if (messageContainer) {
+        messageContainer.innerHTML = '';
+        messageContainer.appendChild(successDiv);
+    } else if (setPasswordForm) {
         setPasswordForm.insertBefore(successDiv, setPasswordForm.firstChild);
     }
 }
@@ -69,6 +135,7 @@ function showSuccess(message) {
 // Check password match in real-time
 if (confirmPasswordInput && newPasswordInput) {
     confirmPasswordInput.addEventListener('input', function() {
+        clearFieldError(this);
         const newPassword = newPasswordInput.value;
         const confirmPassword = confirmPasswordInput.value;
         
@@ -86,6 +153,7 @@ if (confirmPasswordInput && newPasswordInput) {
     });
     
     newPasswordInput.addEventListener('input', function() {
+        clearFieldError(this);
         const newPassword = newPasswordInput.value;
         const confirmPassword = confirmPasswordInput.value;
         
@@ -118,19 +186,36 @@ if (setPasswordForm) {
         const newPassword = newPasswordInput?.value;
         const confirmPassword = confirmPasswordInput?.value;
 
-        // Validation
-        if (!newPassword || !confirmPassword) {
-            showError('Please enter both password fields.');
-            return;
+        // Collect all validation errors
+        let errors = [];
+        let firstErrorField = null;
+
+        // Validate all fields and mark errors
+        if (!newPassword) {
+            showFieldError(newPasswordInput);
+            errors.push('New password is required');
+            if (!firstErrorField) firstErrorField = newPasswordInput;
+        } else if (newPassword.length < 6) {
+            showFieldError(newPasswordInput);
+            errors.push('Password must be at least 6 characters long');
+            if (!firstErrorField) firstErrorField = newPasswordInput;
         }
 
-        if (newPassword.length < 8) {
-            showError('Password must be at least 8 characters long.');
-            return;
+        if (!confirmPassword) {
+            showFieldError(confirmPasswordInput);
+            errors.push('Please confirm your password');
+            if (!firstErrorField) firstErrorField = confirmPasswordInput;
+        } else if (newPassword && confirmPassword && newPassword !== confirmPassword) {
+            showFieldError(newPasswordInput);
+            showFieldError(confirmPasswordInput);
+            errors.push('Passwords do not match');
+            if (!firstErrorField) firstErrorField = confirmPasswordInput;
         }
 
-        if (newPassword !== confirmPassword) {
-            showError('Passwords do not match. Please try again.');
+        // If there are errors, show them and stop
+        if (errors.length > 0) {
+            showError(errors[0]);
+            firstErrorField?.focus();
             return;
         }
 
@@ -141,6 +226,11 @@ if (setPasswordForm) {
         if (!token) {
             showError('Invalid or missing reset token. Please use the link from your email.');
             return;
+        }
+
+        // Show loader
+        if (window.loader) {
+            window.loader.show('Resetting your password...');
         }
 
         // Disable submit button
@@ -156,14 +246,31 @@ if (setPasswordForm) {
                 newPassword: newPassword
             });
             
+            // Update loader message
+            if (window.loader) {
+                window.loader.updateMessage('Password reset successful!');
+            }
+            
             // Show success message
             showSuccess('Password has been reset successfully!\nRedirecting to login page...');
+            
+            // Hide loader after short delay
+            setTimeout(() => {
+                if (window.loader) {
+                    window.loader.hide();
+                }
+            }, 1000);
             
             // Redirect to login page after successful reset
             setTimeout(() => {
                 window.location.href = 'login.html';
             }, 2000);
         } catch (error) {
+            // Hide loader
+            if (window.loader) {
+                window.loader.hide();
+            }
+            
             // Handle errors
             let errorMessage = 'Failed to reset password. Please try again.';
             
